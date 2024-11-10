@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tuple-literals</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#tuple型のリテラル">tuple型のリテラル</a></li>
+<li><a href="#参考文献">参考文献</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="tuple型のリテラル">tuple型のリテラル</h1>
+<p>一つの要素のみからなるtuple型をリテラルで定義する方法は以下である。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># "()"無しでも可能</span>
+a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'tuple'&gt;
+&lt;class 'tuple'&gt;
+</code></pre>
+<p>ただ単に<code>()</code>で記述した場合はタプル型にはならない。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'int'&gt;
+</code></pre>
+<p>また、要素数が0のtuple型を作成する方法は以下である。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'tuple'&gt;
+</code></pre>
+<h1 id="参考文献">参考文献</h1>
+<blockquote>
+<p>公式ドキュメント<br>
+<a href="https://docs.python.org/ja/3/library/stdtypes.html#tuple">https://docs.python.org/ja/3/library/stdtypes.html#tuple</a></p>
+</blockquote>
+
+    </div>
+  </div>
+</body>
+
+</html>

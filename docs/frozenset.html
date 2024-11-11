@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>frozenset</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+  <link rel="icon" href="favicon.ico" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+	    <ul>
+		<li><a href="https://totosuki.github.io/">Home</a></li>
+		</ul>
+		<hr>
+      
+<ul>
+<li><a href="#frozenset">frozenset</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="frozenset">frozenset</h1>
+<p>Pythonの集合型は、実は二種類存在する。<br><br>
+一つ目は言わずとしれた、<code>set</code>型である。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+
+<span class="token comment"># set型はリテラルで作成することもできる</span>
+b <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">}</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'set'&gt;
+{1, 2, 5}
+&lt;class 'set'&gt;
+{1, 2, 5}
+</code></pre>
+<p>そしてもう一つが、今回紹介する<code>frozenset</code>型である。<br></p>
+<pre class=" language-python"><code class="prism  language-python">c <span class="token operator">=</span> <span class="token builtin">frozenset</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'frozenset'&gt;
+frozenset({1, 2, 5})
+</code></pre>
+<p>この<code>frozenset</code>型の一番大きな違いは、<code>set</code>型と違って変更不可（immutable）な集合型である点。<br><br>
+ここで、<code>frozenset</code>型の<code>__dir__</code>を確認してみよう。</p>
+<pre class=" language-python"><code class="prism  language-python">d <span class="token operator">=</span> <span class="token builtin">frozenset</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token builtin">dir</span><span class="token punctuation">(</span>d<span class="token punctuation">)</span><span class="token punctuation">,</span> sep <span class="token operator">=</span> <span class="token string">", "</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>__and__, __class__, __class_getitem__, __contains__, __delattr__, __dir__, __doc__, __eq__, __format__, __ge__, __getattribute__, __getstate__, __gt__, __hash__, __init__, __init_subclass__, __iter__, __le__, __len__, __lt__, __ne__, __new__, __or__, __rand__, __reduce__, __reduce_ex__, __repr__, __ror__, __rsub__, __rxor__, __setattr__, __sizeof__, __str__, __sub__, __subclasshook__, __xor__, copy, difference, intersection, isdisjoint, issubset, issuperset, symmetric_difference, union
+</code></pre>
+<p>頑張って探してみると、<code>__hash__</code>が実装されていることが分かる。<br><br>
+つまり…ハッシュ化が出来るということが<code>frozenset</code>型の魅力である。</p>
+<p>そして、ハッシュ化が出来るということは、<code>frozenset</code>型は辞書型の<code>key</code>になれるということである！<br><br>
+辞書型の<code>key</code>として<code>frozenset</code>型を使ってみる。</p>
+<pre class=" language-python"><code class="prism  language-python">e <span class="token operator">=</span> <span class="token builtin">frozenset</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+test_dict <span class="token operator">=</span> <span class="token punctuation">{</span>e <span class="token punctuation">:</span> <span class="token string">"Hello"</span><span class="token punctuation">}</span> <span class="token comment"># &lt;- 辞書型のキーに使えている</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>test_dict<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>test_dict<span class="token punctuation">[</span><span class="token builtin">frozenset</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>{frozenset({1, 2, 5}): 'Hello'}
+Hello
+</code></pre>
+<p>辞書型の<code>key</code>として使えることが確認できた。<br>
+しかし、これ以外は基本的に<code>set</code>型と同じであるためあまり使うケースは少ない…</p>
+<h1 id="参考">参考</h1>
+<blockquote>
+<p>公式ドキュメント<br>
+<a href="https://docs.python.org/ja/3/reference/datamodel.html#set-types">https://docs.python.org/ja/3/reference/datamodel.html#set-types</a></p>
+</blockquote>
+
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ellipsis</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+	    <ul>
+		<li><a href="https://totosuki.github.io/">Home</a></li>
+		</ul>
+		<hr>
+      
+<ul>
+<li><a href="#ellipsis">Ellipsis</a></li>
+<li><a href="#numpyで使う">NumPyで使う</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="ellipsis">Ellipsis</h1>
+<p>数少ないPythonの組み込み定数の中に<code>Ellipsis</code>というオブジェクトがある。<br></p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> types
+a <span class="token operator">=</span> types<span class="token punctuation">.</span>EllipsisType<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'ellipsis'&gt;
+</code></pre>
+<p><code>Ellipsis</code>はリテラルで記述することができる。記述方法は<code>...</code>。<br></p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'ellipsis'&gt;
+</code></pre>
+<p>Pythonのライブラリの中を覗いてみると時々書いてある<code>...</code>は、実は<code>Ellipsis</code>オブジェクトである。<br><br>
+以下は<code>builtins.pyi</code>の110行目辺りを抜粋したものである。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> typing <span class="token keyword">import</span> Any
+<span class="token keyword">def</span> <span class="token function">__setattr__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> name<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">,</span> value<span class="token punctuation">:</span> Any<span class="token punctuation">,</span> <span class="token operator">/</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">&gt;</span> <span class="token boolean">None</span><span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">def</span> <span class="token function">__delattr__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> name<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">,</span> <span class="token operator">/</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">&gt;</span> <span class="token boolean">None</span><span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">def</span> <span class="token function">__eq__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> value<span class="token punctuation">:</span> <span class="token builtin">object</span><span class="token punctuation">,</span> <span class="token operator">/</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">&gt;</span> <span class="token builtin">bool</span><span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">def</span> <span class="token function">__ne__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> value<span class="token punctuation">:</span> <span class="token builtin">object</span><span class="token punctuation">,</span> <span class="token operator">/</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">&gt;</span> <span class="token builtin">bool</span><span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+</code></pre>
+<h1 id="numpyで使う">NumPyで使う</h1>
+<p>他の使い道として、NumPyのスライス表記に<code>Ellipsis</code>を使うというものがある。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+a <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>rand<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+
+</code></pre>
+<pre><code>[[[0.56590201 0.97903887 0.44530135 0.20071816]
+  [0.82552545 0.82236629 0.52527161 0.33831452]
+  [0.57238685 0.27612096 0.9644424  0.63009476]]
+
+ [[0.47114314 0.56021692 0.29685363 0.46150172]
+  [0.10109488 0.43051151 0.82899553 0.98291398]
+  [0.38259785 0.15382005 0.11119233 0.4664168 ]]]
+</code></pre>
+<p>このNumPy配列の、最後の次元の2番目の要素を取り出したい時を考える。<br></p>
+<pre class=" language-python"><code class="prism  language-python">b <span class="token operator">=</span> a<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>[[0.44530135 0.52527161 0.9644424 ]
+ [0.29685363 0.82899553 0.11119233]]
+</code></pre>
+<p>上のように書いてもいいのだが、同等の処理を<code>Ellipsis</code>を使って書くこともできる。</p>
+<pre class=" language-python"><code class="prism  language-python">c <span class="token operator">=</span> a<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>[[0.44530135 0.52527161 0.9644424 ]
+ [0.29685363 0.82899553 0.11119233]]
+</code></pre>
+<h1 id="参考">参考</h1>
+<blockquote>
+<p>公式ドキュメント<br>
+<a href="https://docs.python.org/3/library/constants.html#Ellipsis">https://docs.python.org/3/library/constants.html#Ellipsis</a></p>
+</blockquote>
+<blockquote>
+<p>Python3の…（Ellipsisオブジェクト）について<br>
+<a href="https://qiita.com/yubessy/items/cc1ca4dbc3161f84285e">https://qiita.com/yubessy/items/cc1ca4dbc3161f84285e</a></p>
+</blockquote>
+
+    </div>
+  </div>
+</body>
+
+</html>

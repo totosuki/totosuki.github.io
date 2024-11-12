@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>non-existent-key</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+  <link rel="icon" href="favicon.ico" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+		<ul>
+		<li><a href="https://totosuki.github.io/">Home</a></li>
+		</ul>
+		<hr>
+      
+<ul>
+<li><a href="#存在しないkeyを取得すると">存在しないkeyを取得すると</a></li>
+<li><a href="#try-except">try-except</a></li>
+<li><a href="#dict.get">dict.get()</a></li>
+<li><a href="#defaultdict">defaultdict</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="存在しないkeyを取得すると">存在しないkeyを取得すると</h1>
+<p><code>dict</code>型では存在しない<code>key</code>を取得しようとするとエラーが起きてしまう。<br><br>
+まず初めに実際に取得しようとしてみよう。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"a"</span> <span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"b"</span> <span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">}</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token string">"c"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>---------------------------------------------------------------------------
+KeyError                                  Traceback (most recent call last)
+Cell In[4], line 2
+      1 a = {"a" : 1, "b" : 2}
+----&gt; 2 print(a["c"])
+
+KeyError: 'c'
+</code></pre>
+<p><code>KeyError</code>例外が出た。今回はこれの対処方法を<b>三つ紹介</b>しようと思う。</p>
+<h1 id="try-except">try-except</h1>
+<p>dict型の存在しない<code>key</code>で値を取得する可能性がある際に、対処する方法を二つ紹介する。<br><br>
+一つ目は、最も一般的な方法である<code>try-except</code>文を使用する方法である。</p>
+<p>実際に、<code>try-except</code>文を使用して存在しない<code>key</code>を取得しようとしてみる。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"a"</span> <span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"b"</span> <span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">}</span>
+<span class="token keyword">try</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token string">"c"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">except</span> KeyError<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"KeyErrorです"</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>KeyErrorです
+</code></pre>
+<p>しっかり<code>try-except</code>文を使用することで、対処をすることが出来た。</p>
+<h1 id="dict.get">dict.get()</h1>
+<p>二つ目の対処方法は、<code>dict.get</code>メソッドを使う方法である。<br><br>
+<code>dict.get</code>メソッドを使うことで、<code>key</code>が存在しない場合に対処できることが出来る。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"a"</span> <span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"b"</span> <span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">}</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"c"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>None
+</code></pre>
+<p>存在しない<code>key</code>を取得しようとすると、<code>None</code>が返された。<br></p>
+<p>また、<code>dict.get</code>メソッドの引数には<code>default</code>というものがあり、それを指定することで、存在しない<code>key</code>を取得しようとした際に返される値を変更することが出来る。<br><br>
+ちなみに、<code>default</code>引数の初期値は<code>None</code>のため先程は<code>None</code>が返されていた。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"a"</span> <span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"b"</span> <span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">}</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"c"</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>-1
+</code></pre>
+<p><code>default</code>引数に<code>-1</code>を入れたので、存在しない<code>key</code>を取得した際に<code>-1</code>が返されていることが確認できた。</p>
+<h1 id="defaultdict">defaultdict</h1>
+<p>最後に、そもそも<code>dict</code>型を使用しないという解決手段が存在する。<br><br>
+標準ライブラリにある<code>collections</code>には、<code>defaultdict</code>というデータ型が存在する。<br></p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">from</span> collections <span class="token keyword">import</span> defaultdict
+</code></pre>
+<p><code>defaultdict</code>は、インスタンス化の際に初期化を関数ですることが可能である。<br><br>
+今回は、例として分かりやすくするため無名関数を使用しないが、実際は無名関数を使用したほうが良いと思う。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> <span class="token string">"Hello"</span>
+
+a <span class="token operator">=</span> defaultdict<span class="token punctuation">(</span>func<span class="token punctuation">)</span>
+a<span class="token punctuation">[</span><span class="token string">"a"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span>
+a<span class="token punctuation">[</span><span class="token string">"b"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">2</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token string">"a"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token string">"b"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token string">"c"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>1
+2
+Hello
+</code></pre>
+<p>また、当たり前ではあるがint型などデータ型のコンストラクタを利用することも可能である。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> defaultdict<span class="token punctuation">(</span><span class="token builtin">list</span><span class="token punctuation">)</span>
+a<span class="token punctuation">[</span><span class="token string">"a"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span>
+a<span class="token punctuation">[</span><span class="token string">"b"</span><span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token string">"a"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token string">"b"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token string">"c"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>[1, 2, 3]
+[4]
+[]
+</code></pre>
+<h1 id="参考">参考</h1>
+<blockquote>
+<p>公式ドキュメント（defaultdict）<br>
+<a href="https://docs.python.org/ja/3.13/library/collections.html#collections.defaultdict">https://docs.python.org/ja/3.13/library/collections.html#collections.defaultdict</a></p>
+</blockquote>
+<blockquote>
+<p>Pythonの辞書のgetメソッドでキーから値を取得（存在しないキーでもOK）<br>
+<a href="https://note.nkmk.me/python-dict-get/">https://note.nkmk.me/python-dict-get/</a></p>
+</blockquote>
+
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:site_name" content="Python Insight">
+  <meta property="og:title" content="__doc__について">
+  <meta property="og:url" content="https://totosuki.github.io/doc">
+  <meta property="og:description" content="Pythonに関する様々な知見をまとめたサイト。">
+  <title>__doc__</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+  <link rel="icon" href="favicon.ico" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="https://totosuki.github.io/">Home</a></li>
+</ul>
+<hr>
+<ul>
+<li><a href="#doc__">__doc__</a></li>
+<li><a href="#docstrings">docstrings</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="doc__">__doc__</h1>
+<p>標準ライブラリや外部ライブラリなどで、関数やクラスの使用法が分からなくなった時の選択肢の一つ。<br><br>
+<code>__doc__</code>という特殊属性を使用することで、関数やクラスなどの使用法が分かる場合がある。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>__doc__<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>int([x]) -&gt; integer
+int(x, base=10) -&gt; integer
+
+Convert a number or string to an integer, or return 0 if no arguments
+are given.  If x is a number, return x.__int__().  For floating-point
+numbers, this truncates towards zero.
+
+If x is not a number or if base is given, then x must be a string,
+bytes, or bytearray instance representing an integer literal in the
+given base.  The literal can be preceded by '+' or '-' and be surrounded
+by whitespace.  The base defaults to 10.  Valid bases are 0 and 2-36.
+Base 0 means to interpret the base from the string as an integer literal.
+&gt;&gt;&gt; int('0b100', base=0)
+4
+</code></pre>
+<p>Linuxコマンドの<code>man</code>にとても似ている。<br><br>
+でも、結構簡単に使えるから気持ちとしては<code>help</code>オプションぐらいの気持ちで気軽に使ってみよう！</p>
+<h1 id="docstrings">docstrings</h1>
+<p>また、自作の関数やクラスで<code>__doc__</code>を使えるようにするには<code>docstring</code>という方法を使う。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">MyClass</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""This is a class!!"""</span>
+
+<span class="token keyword">def</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""This is a function!!"""</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>func<span class="token punctuation">.</span>__doc__<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>MyClass<span class="token punctuation">.</span>__doc__<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>This is a function!!
+This is a class!!
+</code></pre>
+<p>上記の例では、適当に<code>docstrings</code>を記載しているが、しっかり書きたいなら一般的に使われているスタイルに沿って記述すると尚良し。<br><br>
+代表的なスタイルとして挙げられるのは</p>
+<ul>
+<li>reStructuredTextスタイル</li>
+<li>Googleスタイル</li>
+<li>NumPyスタイル</li>
+</ul>
+<p>などがあるけど、とりあえず<a href="https://peps.python.org/pep-0257/">PEP257</a>のルールは守ると統一的にはなる。</p>
+<p>そもそも<code>docstrings</code>を書いている時点で十分偉いけどね。</p>
+<h1 id="参考">参考</h1>
+<blockquote>
+<p>[Python] docstringのスタイルと書き方<br>
+<a href="https://qiita.com/flcn-x/items/393c6f1f1e1e5abec906">https://qiita.com/flcn-x/items/393c6f1f1e1e5abec906</a></p>
+</blockquote>
+
+    </div>
+  </div>
+</body>
+
+</html>

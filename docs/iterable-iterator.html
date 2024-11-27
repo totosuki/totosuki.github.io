@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:site_name" content="Python Insight">
+  <meta property="og:title" content="iterableとiteratorとは">
+  <meta property="og:url" content="https://totosuki.github.io/iterable-iterator">
+  <meta property="og:description" content="Pythonに関する様々な知見をまとめたサイト。">
+  <title>iterable-iterator</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+  <link rel="icon" href="favicon.ico" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+		<ul>
+		<li><a href="https://totosuki.github.io/">Home</a></li>
+		</ul>
+		<hr>
+      
+<ul>
+<li><a href="#iterableとiterator">iterableとiterator</a></li>
+<li><a href="#for文が動く条件">for文が動く条件</a>
+<ul>
+<li><a href="#iter__">__iter__</a></li>
+<li><a href="#next__">__next__</a></li>
+<li><a href="#疑問点1">疑問点1</a></li>
+<li><a href="#疑問点2">疑問点2</a></li>
+<li><a href="#まとめ">まとめ</a></li>
+</ul>
+</li>
+<li><a href="#list型">List型</a></li>
+<li><a href="#iterableとiteratorとは">iterableとiteratorとは</a></li>
+<li><a href="#listに__next__が無い理由">Listに__next__が無い理由</a></li>
+<li><a href="#mapはiterator">mapはiterator</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="iterableとiterator">iterableとiterator</h1>
+<p>for文から<code>iterable</code>と<code>iterator</code>について触れて考えてみる。<br><br>
+また分かりやすくするため、できるだけ最小構成のクラスで試してみた。</p>
+<p>注意として、<code>__iter__</code>や<code>__next__</code>などの特殊メソッドについての説明はしていない。<br><br>
+そして<a href="https://totosuki.github.io/">Home</a>でも書いているが、自分なりに<code>iterable</code>と<code>iterator</code>の違いを調べたメモをまとめたものである。</p>
+<h1 id="for文が動く条件">for文が動く条件</h1>
+<h2 id="iter__">__iter__</h2>
+<p>まず初めに、<code>__iter__</code>のみを実装したクラスでfor文を回してみる</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">Test1</span><span class="token punctuation">:</span>
+  <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">pass</span>
+  
+  <span class="token keyword">def</span> <span class="token function">__iter__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> <span class="token number">5</span>
+
+test1 <span class="token operator">=</span> Test1<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> item <span class="token keyword">in</span> test1<span class="token punctuation">:</span>
+  <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+Cell In[57], line 10
+      7     return 5
+      9 test1 = Test1()
+---&gt; 10 for item in test1:
+     11   print(item)
+
+TypeError: iter() returned non-iterator of type 'int'
+</code></pre>
+<h2 id="next__">__next__</h2>
+<p><code>__iter__</code>のみのクラス実装だと上手く動かなかった。<br><br>
+次に、<code>__iter__</code>と<code>__next__</code>を実装したクラスで動かしてみる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">Test2</span><span class="token punctuation">:</span>
+  <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    self<span class="token punctuation">.</span>i <span class="token operator">=</span> <span class="token number">0</span>
+  
+  <span class="token keyword">def</span> <span class="token function">__iter__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> self
+  
+  <span class="token keyword">def</span> <span class="token function">__next__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> self<span class="token punctuation">.</span>i <span class="token operator">&gt;=</span> <span class="token number">5</span><span class="token punctuation">:</span>
+      <span class="token keyword">raise</span> StopIteration<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># これが呼び出されるまでfor文は続く仕組み</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+      self<span class="token punctuation">.</span>i <span class="token operator">+=</span> <span class="token number">1</span>
+      <span class="token keyword">return</span> self<span class="token punctuation">.</span>i
+
+test2 <span class="token operator">=</span> Test2<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> item <span class="token keyword">in</span> test2<span class="token punctuation">:</span>
+  <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>1
+2
+3
+4
+5
+</code></pre>
+<h2 id="疑問点1">疑問点1</h2>
+<p><code>__iter__</code>のみでは動かなかったが、<code>__next__</code>だけでは動くのか？<br><br>
+試してみる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">Test3</span><span class="token punctuation">:</span>
+  <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    self<span class="token punctuation">.</span>i <span class="token operator">=</span> <span class="token number">0</span>
+
+  <span class="token keyword">def</span> <span class="token function">__next__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> self<span class="token punctuation">.</span>i <span class="token operator">&gt;=</span> <span class="token number">5</span><span class="token punctuation">:</span>
+      <span class="token keyword">raise</span> StopIteration<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+      self<span class="token punctuation">.</span>i <span class="token operator">+=</span> <span class="token number">1</span>
+      <span class="token keyword">return</span> self<span class="token punctuation">.</span>i
+
+test3 <span class="token operator">=</span> Test3<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> item <span class="token keyword">in</span> test3<span class="token punctuation">:</span>
+  <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+Cell In[84], line 13
+     10       return self.i
+     12 test3 = Test3()
+---&gt; 13 for item in test3:
+     14   print(item)
+
+TypeError: 'Test3' object is not iterable
+</code></pre>
+<p><code>TypeError</code>が出た。どうやら、<code>__iter__</code>だけでも<code>__next__</code>だけでも動かないらしい。</p>
+<h2 id="疑問点2">疑問点2</h2>
+<p><code>__iter__</code>で返されるクラスは、<code>self</code>ではなく<code>__next__</code>を実装した別クラスでも良いのか？</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">Test4</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">pass</span>
+    
+    <span class="token keyword">def</span> <span class="token function">__iter__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> Test5<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Test5</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>i <span class="token operator">=</span> <span class="token number">0</span>
+
+    <span class="token keyword">def</span> <span class="token function">__next__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>i <span class="token operator">&gt;=</span> <span class="token number">5</span><span class="token punctuation">:</span>
+            <span class="token keyword">raise</span> StopIteration<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>i <span class="token operator">+=</span> <span class="token number">1</span>
+            <span class="token keyword">return</span> self<span class="token punctuation">.</span>i
+
+test4 <span class="token operator">=</span> Test4<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> item <span class="token keyword">in</span> test4<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>1
+2
+3
+4
+5
+</code></pre>
+<p><code>__iter__</code>で<code>__next__</code>が実装されている別のクラスのインスタンスを返しても動くことが分かった。</p>
+<h2 id="まとめ">まとめ</h2>
+<p>for文は <code>__iter__</code> で <code>__next__</code> が実装されているオブジェクトを呼び出す必要がある。<br><br>
+別のクラスのインスタンスを呼び出しても問題は無い。（<code>__next__</code>が実装されていれば）</p>
+<h1 id="list型">List型</h1>
+<p>for文が動く条件が分かったので、次はList型はどのようにしてfor文上で使えるようになっているか見てみる。<br><br>
+まずは、List型の特殊メソッドに何が含まれているか確認する。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">dir</span><span class="token punctuation">(</span><span class="token builtin">list</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>['__add__', '__class__', '__class_getitem__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getstate__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
+</code></pre>
+<p>ここで、上記の出力をよーく確認してほしいのだが、<code>__iter__</code>は実装されているが、「<code>__next__</code>」が実装されていない。<br><br>
+じゃあ、for文で使えないのでは？と思うかもしれないが実際のところList型は使えている。</p>
+<p>では、どうしてfor文で使用することが出来るのか…を知るために以下のコードを実行してみる。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span>
+b <span class="token operator">=</span> a<span class="token punctuation">.</span>__iter__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'list_iterator'&gt;
+</code></pre>
+<p>出力を見ると分かるのだが、List型は<code>__iter__</code>の戻り値を、<code>list_iterator</code>というクラスのインスタンスにしているのである。<br><br>
+実際に、<code>list_iterator</code>クラスの特殊メソッドを確認してみる。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span>
+b <span class="token operator">=</span> a<span class="token punctuation">.</span>__iter__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>b<span class="token punctuation">.</span>__dir__<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>b<span class="token punctuation">.</span>__next__<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>b<span class="token punctuation">.</span>__next__<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>['__getattribute__', '__iter__', '__next__', '__length_hint__', '__reduce__', '__setstate__', '__doc__', '__new__', '__repr__', '__hash__', '__str__', '__setattr__', '__delattr__', '__lt__', '__le__', '__eq__', '__ne__', '__gt__', '__ge__', '__init__', '__reduce_ex__', '__getstate__', '__subclasshook__', '__init_subclass__', '__format__', '__sizeof__', '__dir__', '__class__']
+1
+2
+</code></pre>
+<p><code>list_iterator</code>にしっかり<code>__next__</code>が実装されていることが分かった。<br><br>
+つまりList型は、for文を動かす際にList型の<code>__iter__</code>で、<code>list_iterator</code>クラスのインスタンスを呼び、<code>list_iterator</code>の特殊メソッドである<code>__next__</code>でfor文のループ変数に一つづつ値を入れているのである。</p>
+<h1 id="iterableとiteratorとは">iterableとiteratorとは</h1>
+<p>ここまでを踏まえて、<code>iterable</code>と<code>iterator</code>について考えてみる。</p>
+<p>初めに、<a href="https://docs.python.org/ja/3/glossary.html#term-iterable">公式ドキュメント</a>を見るに、List型は<code>iterable</code>であることが分かる。<br><br>
+そして、List型の<code>__iter__</code>で返された値は、<code>list_iterator</code>クラスであり、名前からして<code>iterator</code>であることに間違いは無い。</p>
+<pre class=" language-python"><code class="prism  language-python">str_iter <span class="token operator">=</span> <span class="token builtin">str</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__iter__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+tuple_iter <span class="token operator">=</span> <span class="token builtin">tuple</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__iter__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>str_iter<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>tuple_iter<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'str_ascii_iterator'&gt;
+&lt;class 'tuple_iterator'&gt;
+</code></pre>
+<p>また、同様に先程の<a href="https://docs.python.org/ja/3/glossary.html#term-iterable">公式ドキュメント</a>で<code>iterable</code>として紹介されている<code>str</code>と<code>tuple</code>も<code>__iter__</code>で返されるクラスが、<code>xxx_iterator</code>であることが分かるため、<code>list</code>だけが特殊では無いだろうと推測できる。</p>
+<p>そのため、<code>iterable</code>と<code>iterator</code>を以下のように認識出来ると思う。<br></p>
+<ul>
+<li><code>iterable</code>は、特殊メソッド<code>__iter__</code>で、<code>iterator</code>を返すクラス。</li>
+<li><code>iterator</code>は、特殊メソッド<code>__next__</code>で、値を一つずつ返すことが出来るクラス。</li>
+</ul>
+<p>余計困惑するかもしれないが、水道水と蛇口のような関係だなと思った。<br><br>
+水道水(iterator)は水がいつでも供給可能で、蛇口(iterable)は水を一回の操作で少しずつ取り出せるみたいな。</p>
+<h1 id="listに__next__が無い理由">Listに__next__が無い理由</h1>
+<p>ここまでで納得できるなら問題ないのだが、私には一つ疑問が生まれた。<br><br>
+「何故、List型には直接<code>__next__</code>を入れずわざわざ<code>list_iterator</code>を返しているのか？」という疑問である。</p>
+<p>これは、あくまで理由の一つに過ぎないが「複数の<code>iterator</code>を独立させたいから」というのが大きい理由では無いかと思う。<br><br>
+実際に、以下のコードを動かして<code>list_iterator</code>を返すメリットを考えてみる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">Test5</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>i <span class="token operator">=</span> <span class="token number">0</span>
+    
+    <span class="token keyword">def</span> <span class="token function">__iter__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> self
+    
+    <span class="token keyword">def</span> <span class="token function">__next__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>i <span class="token operator">&gt;=</span> <span class="token number">5</span><span class="token punctuation">:</span>
+            <span class="token keyword">raise</span> StopIteration<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># これが呼び出されるまでfor文は続く仕組み</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>i <span class="token operator">+=</span> <span class="token number">1</span>
+            <span class="token keyword">return</span> self<span class="token punctuation">.</span>i
+
+test5 <span class="token operator">=</span> Test5<span class="token punctuation">(</span><span class="token punctuation">)</span>
+test5_iter1 <span class="token operator">=</span> test5<span class="token punctuation">.</span>__iter__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+test5_iter2 <span class="token operator">=</span> test5<span class="token punctuation">.</span>__iter__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+l_list <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+l_iter1 <span class="token operator">=</span> l_list<span class="token punctuation">.</span>__iter__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+l_iter2 <span class="token operator">=</span> l_list<span class="token punctuation">.</span>__iter__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>test5_iter1<span class="token punctuation">.</span>__next__<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>test5_iter2<span class="token punctuation">.</span>__next__<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>l_iter1<span class="token punctuation">.</span>__next__<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>l_iter2<span class="token punctuation">.</span>__next__<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>1
+2
+1
+1
+</code></pre>
+<p><code>Test5</code>クラスは、<code>__iter__</code>を呼び出すと、同じインスタンスを返すクラスである。<br><br>
+ここで、出力をみてみると、<code>Test5</code>のクラスは複数の<code>iterator</code>が独立していないことが分かり、List型は複数の<code>iterator</code>が独立していることが分かった！</p>
+<p>これが、List型などが<code>__iter__</code>でselfを返していない理由の一つである。</p>
+<p>また、<code>Test5</code>クラスは自分自身を返しているので、<code>iterable</code>とは言いにくい。一度しか<code>iterator</code>を呼び出せない<code>iterable</code>としても振る舞えるな〜位の気持ち。</p>
+<h1 id="mapはiterator">mapはiterator</h1>
+<p>Pythonで普段使うようなデータ型で、<code>iterator</code>はあまり存在しない。<code>list</code>,<code>str</code>,<code>set</code>,<code>tuple</code>…などはすべて<code>iterable</code>である。<br><br>
+しかし、普段から何かと使う<code>map</code>クラスは<code>iterator</code>であるので少し紹介する。</p>
+<pre class=" language-python"><code class="prism  language-python">m <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> x <span class="token operator">**</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> item <span class="token keyword">in</span> m<span class="token punctuation">:</span> <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+<span class="token keyword">for</span> item <span class="token keyword">in</span> m<span class="token punctuation">:</span> <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>1
+4
+9
+16
+25
+</code></pre>
+<p><code>map</code>クラスは、上のコードのように<code>__iter__</code>でselfを返すため、上記の例などでは上手く使用することが出来ない。<br><br>
+二回以上for文で使いたい場合は、List型など<code>iterable</code>なオブジェクトに型変換するか、下記のコードのように<code>copy.deepcopy</code>メソッドを使用するなどしよう。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> copy
+m <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> x <span class="token operator">**</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> item <span class="token keyword">in</span> copy<span class="token punctuation">.</span>deepcopy<span class="token punctuation">(</span>m<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+<span class="token keyword">for</span> item <span class="token keyword">in</span> copy<span class="token punctuation">.</span>deepcopy<span class="token punctuation">(</span>m<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>1
+4
+9
+1
+4
+9
+</code></pre>
+<h1 id="参考">参考</h1>
+<blockquote>
+<p>公式ドキュメント（iterable）<br>
+<a href="https://docs.python.org/ja/3/glossary.html#term-iterable">https://docs.python.org/ja/3/glossary.html#term-iterable</a></p>
+</blockquote>
+<blockquote>
+<p>Python でイテラブルとイテレータの使い分け<br>
+<a href="https://zenn.dev/shizukakokoro/articles/d634f8ddad833c">https://zenn.dev/shizukakokoro/articles/d634f8ddad833c</a></p>
+</blockquote>
+
+    </div>
+  </div>
+</body>
+
+</html>

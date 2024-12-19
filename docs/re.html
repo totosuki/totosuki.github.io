@@ -1,0 +1,308 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>re</title>
+  <meta property="og:site_name" content="Python Insight">
+  <meta property="og:title" content="reモジュール解説">
+  <meta property="og:url" content="https://totosuki.github.io/re">
+  <meta property="og:description" content="Pythonに関する様々な知見をまとめたサイト。">
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+  <link rel="icon" href="favicon.ico" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+	    <ul>
+		<li><a href="https://totosuki.github.io/">Home</a></li>
+		</ul>
+		<hr>
+      
+<ul>
+<li><a href="#reモジュール">reモジュール</a></li>
+<li><a href="#関数">関数</a>
+<ul>
+<li><a href="#re.compile">re.compile</a></li>
+<li><a href="#re.search">re.search</a></li>
+<li><a href="#re.match">re.match</a></li>
+<li><a href="#re.fullmatch">re.fullmatch</a></li>
+<li><a href="#re.split">re.split</a></li>
+<li><a href="#re.findall">re.findall</a></li>
+<li><a href="#re.finditer">re.finditer</a></li>
+<li><a href="#re.sub">re.sub</a></li>
+<li><a href="#re.subn">re.subn</a></li>
+<li><a href="#re.escape">re.escape</a></li>
+<li><a href="#re.purge">re.purge</a></li>
+</ul>
+</li>
+<li><a href="#例外">例外</a>
+<ul>
+<li><a href="#re.patternerror">re.PatternError</a></li>
+</ul>
+</li>
+<li><a href="#参考">参考</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="reモジュール">reモジュール</h1>
+<p>文字列に対して、検索や置換、検証などをする方法として正規表現を使用する方法が挙げられる。今回は、Pythonでの正規表現を使うために使用するモジュール<code>re</code>について解説をしていこうと思う。</p>
+<p>reモジュールを使用するには以下のコードが必要である。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">import</span> re
+</code></pre>
+<h1 id="関数">関数</h1>
+<h2 id="re.compile">re.compile</h2>
+<p>正規表現オブジェクト<code>re.Pattern</code>にコンパイルをする。<br>
+コンパイルすることで、<code>match</code>や<code>search</code>などを使ってマッチングが出来るようになる。<br>
+だが、後述する<code>re.match</code>や<code>re.search</code>でもマッチングが出来るため、少ないマッチング回数であれば当関数を使う必要性はない</p>
+<pre class=" language-python"><code class="prism  language-python">pattern <span class="token operator">=</span> re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">"吾輩は[猫犬]"</span><span class="token punctuation">)</span>
+match <span class="token operator">=</span> pattern<span class="token punctuation">.</span>match<span class="token punctuation">(</span><span class="token string">"吾輩は犬である。名前はまだ無い。"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>f<span class="token string">"type(pattern) : {type(pattern)}, type(match) : {type(match)}"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">,</span> end <span class="token operator">=</span> <span class="token string">"\n\n"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 上の処理と下の処理は同等である</span>
+matcn <span class="token operator">=</span> re<span class="token punctuation">.</span>match<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> <span class="token string">"吾輩は[猫犬]"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"吾輩は犬である。名前はまだ無い。"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>f<span class="token string">"type(match) : {type(match)}"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>type(pattern) : &lt;class 're.Pattern'&gt;, type(match) : &lt;class 're.Match'&gt;
+&lt;re.Match object; span=(0, 4), match='吾輩は犬'&gt;
+
+type(match) : &lt;class 're.Match'&gt;
+&lt;re.Match object; span=(0, 4), match='吾輩は犬'&gt;
+</code></pre>
+<h2 id="re.search">re.search</h2>
+<p>この関数は、先ほどまでに紹介した通りである。<br>
+<code>pettern</code>がマッチする最初の位置を探して、対応する<code>re.Match</code>を返す。<br>
+文字列内でマッチしなければ<code>None</code>を返す。</p>
+<pre class=" language-python"><code class="prism  language-python">match <span class="token operator">=</span> re<span class="token punctuation">.</span>search<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> <span class="token string">"猫"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"吾輩は猫である。名前はまだ無い。"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 're.Match'&gt;
+&lt;re.Match object; span=(3, 4), match='猫'&gt;
+</code></pre>
+<h2 id="re.match">re.match</h2>
+<p><code>string</code>の先頭の文字が<code>pattern</code>とマッチする場合のみ<code>re.Match</code>を返す。<br>
+それ以外は全て<code>None</code>として返す。</p>
+<pre class=" language-python"><code class="prism  language-python">match <span class="token operator">=</span> re<span class="token punctuation">.</span>match<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> <span class="token string">"猫"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"吾輩は猫である。名前はまだ無い。"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+match <span class="token operator">=</span> re<span class="token punctuation">.</span>match<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> <span class="token string">"吾輩"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"吾輩は猫である。名前はまだ無い。"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>None
+&lt;re.Match object; span=(0, 2), match='吾輩'&gt;
+</code></pre>
+<h2 id="re.fullmatch">re.fullmatch</h2>
+<p><code>string</code>全体が<code>pattern</code>にマッチする場合のみ、<code>re.Match</code>を返す。<br>
+それ以外は全て<code>None</code>を返す。</p>
+<pre class=" language-python"><code class="prism  language-python">match <span class="token operator">=</span> re<span class="token punctuation">.</span>fullmatch<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> <span class="token string">"猫"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"吾輩は猫である。名前はまだ無い。"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+match <span class="token operator">=</span> re<span class="token punctuation">.</span>fullmatch<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> <span class="token string">"吾輩は猫である。名前はまだ無い。"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"吾輩は猫である。名前はまだ無い。"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>None
+&lt;re.Match object; span=(0, 16), match='吾輩は猫である。名前はまだ無い。'&gt;
+</code></pre>
+<h2 id="re.split">re.split</h2>
+<p><code>pattern</code>にマッチする<code>string</code>の部分で分割する。<br>
+戻り値はリストで返される。</p>
+<pre class=" language-python"><code class="prism  language-python">match <span class="token operator">=</span> re<span class="token punctuation">.</span>split<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> <span class="token string">"l"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"Hello, World!"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+match <span class="token operator">=</span> re<span class="token punctuation">.</span>split<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> <span class="token string">" "</span><span class="token punctuation">,</span> <span class="token comment"># 半角スペース</span>
+  string <span class="token operator">=</span> <span class="token string">"Hello, World!"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>['He', '', 'o, Wor', 'd!']
+['Hello,', 'World!']
+['Hello, World!']
+</code></pre>
+<h2 id="re.findall">re.findall</h2>
+<p><code>pattern</code>にマッチする全ての文字列をリストで返す。</p>
+<pre class=" language-python"><code class="prism  language-python">match <span class="token operator">=</span> re<span class="token punctuation">.</span>findall<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> r<span class="token string">"g[a-z]*"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"Let's go to the baseball game!"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+match <span class="token operator">=</span> re<span class="token punctuation">.</span>findall<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> r<span class="token string">"猫"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"Let's go to the baseball game!"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>['go', 'game']
+[]
+</code></pre>
+<p>注意点は、正規表現を使わず<code>pattern</code>を記述してもあまり意味が無いということだ。（単語の数を数える程度には使えるだろう）</p>
+<pre class=" language-python"><code class="prism  language-python">match <span class="token operator">=</span> re<span class="token punctuation">.</span>findall<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> r<span class="token string">"base"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"base base kick kick base kick kick"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>['base', 'base', 'base']
+3
+</code></pre>
+<h2 id="re.finditer">re.finditer</h2>
+<p><code>pattern</code>に当てはまる全ての文字列を、順々に表示するイテレータを作成する。<br>
+作成されるイテレータの型は<code>callable_iterator</code>。<br>
+因みに、「イテレータとは何か？」については<a href="https://totosuki.github.io/iterable-iterator">私の記事</a>でも紹介をしている。</p>
+<pre class=" language-python"><code class="prism  language-python">match <span class="token operator">=</span> re<span class="token punctuation">.</span>finditer<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> r<span class="token string">"t[a-z]*"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"I want to go to the game too."</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> m <span class="token keyword">in</span> match<span class="token punctuation">:</span>
+  <span class="token keyword">print</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'callable_iterator'&gt;
+&lt;re.Match object; span=(5, 6), match='t'&gt;
+&lt;re.Match object; span=(7, 9), match='to'&gt;
+&lt;re.Match object; span=(13, 15), match='to'&gt;
+&lt;re.Match object; span=(16, 19), match='the'&gt;
+&lt;re.Match object; span=(25, 28), match='too'&gt;
+</code></pre>
+<h2 id="re.sub">re.sub</h2>
+<p><code>pattern</code>にマッチする<code>string</code>の部分を<code>repl</code>引数に置き換える。<br>
+<code>count</code>に数値を入れることで、置き換える回数を指定することが出来る。<br>
+戻り値は<code>str</code>で返される。<br>
+<code>repl</code>引数には関数をいれることも可能であり、関数には<code>re.Match</code>クラスが渡されるらしい。</p>
+<pre class=" language-python"><code class="prism  language-python">match <span class="token operator">=</span> re<span class="token punctuation">.</span>sub<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> r<span class="token string">"犬"</span><span class="token punctuation">,</span>
+  repl <span class="token operator">=</span> <span class="token string">"猫"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"犬の名前はまだ無い。"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+match <span class="token operator">=</span> re<span class="token punctuation">.</span>sub<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> <span class="token string">"[a-z]+@"</span><span class="token punctuation">,</span>
+  repl <span class="token operator">=</span> <span class="token string">"****@"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"google@gmail.com, yahoo@co.jp ant exapmle@test.org"</span><span class="token punctuation">,</span>
+  count <span class="token operator">=</span> <span class="token number">2</span> <span class="token comment"># 置換回数</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>猫の名前はまだ無い。
+****@gmail.com, ****@co.jp ant exapmle@test.org
+</code></pre>
+<h2 id="re.subn">re.subn</h2>
+<p>やっていることは、<code>re.sub</code>と変わらない。<br>
+ただ、戻り値が<code>(置換された文字列, 置換した回数)</code>のタプル型に変わる。</p>
+<pre class=" language-python"><code class="prism  language-python">match <span class="token operator">=</span> re<span class="token punctuation">.</span>subn<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> r<span class="token string">"犬"</span><span class="token punctuation">,</span>
+  repl <span class="token operator">=</span> <span class="token string">"猫"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"犬の名前はまだ無い。"</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+match <span class="token operator">=</span> re<span class="token punctuation">.</span>subn<span class="token punctuation">(</span>
+  pattern <span class="token operator">=</span> <span class="token string">"[a-z]+@"</span><span class="token punctuation">,</span>
+  repl <span class="token operator">=</span> <span class="token string">"****@"</span><span class="token punctuation">,</span>
+  string <span class="token operator">=</span> <span class="token string">"google@gmail.com, yahoo@co.jp ant exapmle@test.org"</span><span class="token punctuation">,</span>
+  count <span class="token operator">=</span> <span class="token number">2</span> <span class="token comment"># 置換回数</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>match<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'tuple'&gt;
+('猫の名前はまだ無い。', 1)
+&lt;class 'tuple'&gt;
+('****@gmail.com, ****@co.jp ant exapmle@test.org', 2)
+</code></pre>
+<h2 id="re.escape">re.escape</h2>
+<p><code>pattern</code>に渡した文字列に特殊文字が含まれている場合、エスケープしてくれる関数。<br>
+引数は<code>pattern</code>のみで、戻り値は<code>str</code>。<br>
+<code>python3.7</code>以降は正規表現で特殊な意味を持つ文字のみがエスケープされるようになった。</p>
+<pre class=" language-python"><code class="prism  language-python">text <span class="token operator">=</span> re<span class="token punctuation">.</span>escape<span class="token punctuation">(</span><span class="token string">"https://www.python.org"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span>
+text <span class="token operator">=</span> re<span class="token punctuation">.</span>escape<span class="token punctuation">(</span><span class="token string">"!#$%&amp;'*+-.^_`|~:"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'str'&gt;
+https://www\.python\.org
+!\#\$%\&amp;'\*\+\-\.\^_`\|\~:
+</code></pre>
+<h2 id="re.purge">re.purge</h2>
+<p><code>re</code>モジュールのキャッシュをクリアするためのメソッド。<br>
+キャッシュは過去にコンパイルされた正規表現を保持することで速度向上につながるもの。<br>
+内部的には見た感じ、<code>re._cache</code>というデータがキャッシュの役割となっており、<code>dict</code>で管理されている。</p>
+<pre class=" language-python"><code class="prism  language-python">pattern1 <span class="token operator">=</span> re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">"猫"</span><span class="token punctuation">)</span>
+pattern2 <span class="token operator">=</span> re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">"犬"</span><span class="token punctuation">)</span>
+pattern3 <span class="token operator">=</span> re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">"吾輩は[猫犬]"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>f<span class="token string">"cache size : {len(re._cache)}"</span><span class="token punctuation">)</span>
+
+re<span class="token punctuation">.</span>purge<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>f<span class="token string">"cache size : {len(re._cache)}"</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>cache size : 3
+cache size : 0
+</code></pre>
+<p>実際にcacheのサイズが変わっていることが確認できた。<br>
+具体的な内部仕様を見たい場合は、<a href="https://github.com/python/cpython/blob/main/Lib/re/__init__.py">この辺り</a>を見ると良い。</p>
+<h1 id="例外">例外</h1>
+<h2 id="re.patternerror">re.PatternError</h2>
+<p>reモジュールに存在する唯一の例外である。<br>
+有効な正規表現ではないものが含まれていた場合に、出力される。<br>
+当たり前ではあるが、マッチしないだけの場合は例外にはならない。<br>
+<code>python3.12</code>までは、この例外は<code>re.error</code>であった。結構わかりやすくなった！</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">try</span><span class="token punctuation">:</span>
+  re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">"*"</span><span class="token punctuation">)</span> <span class="token comment"># 無効な正規表現</span>
+<span class="token keyword">except</span> re<span class="token punctuation">.</span>error <span class="token keyword">as</span> e<span class="token punctuation">:</span>
+  <span class="token keyword">print</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span>
+
+<span class="token keyword">raise</span> re<span class="token punctuation">.</span>error<span class="token punctuation">(</span><span class="token string">"エラーが発生しました。"</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>nothing to repeat at position 0
+
+---------------------------------------------------------------------------
+error                                     Traceback (most recent call last)
+Cell In[70], line 6
+      3 except re.error as e:
+      4   print(e)
+----&gt; 6 raise re.error("エラーが発生しました。")
+
+error: エラーが発生しました。
+</code></pre>
+<p>上記コードは、<code>pyton3.11</code>にて実行しているため、<code>re.error</code>を使用している。</p>
+<h1 id="参考">参考</h1>
+<blockquote>
+<p>公式ドキュメント<br>
+<a href="https://docs.python.org/3/library/re.html">https://docs.python.org/3/library/re.html</a></p>
+</blockquote>
+
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* カード全体をリンク化 */
+.card {
+  display: block;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+  position: relative;
+  font-family: "Roboto", sans-serif;
+  line-height: 1.6;
+}
+
+/* 子要素 */
+.card-title,
+.card-description {
+  position: relative;
+  z-index: 1;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem;
+}
+
+.card-description {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
+}
+
+/* ホバー時の動き */
+.card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  background-color: #fdfdfd;
+}

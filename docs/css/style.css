@@ -106,8 +106,19 @@
   color: #000;
 }
 
+
 /* スクロール時に下のコンテンツが隠れないよう余白 */
 body {
+  padding-top: 60px;
+}
+.stackedit__left {
+  padding-top: 80px;
+  border-right: 1px solid #ddd;
+}
+.dark-mode .stackedit__left {
+  border-right: 1px solid #333;
+}
+.stackedit__right {
   padding-top: 60px;
 }
 

@@ -1,0 +1,187 @@
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* カード全体をリンク化 */
+.card {
+  display: block;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+  position: relative;
+  font-family: "Roboto", sans-serif;
+  line-height: 1.6;
+}
+
+/* 子要素 */
+.card-title,
+.card-description {
+  position: relative;
+  z-index: 1;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem;
+}
+
+.card-description {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
+}
+
+/* ホバー時の動き */
+.card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  background-color: #fdfdfd;
+}
+
+/* ナビゲーションバー */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  z-index: 1000;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0.8rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.logo {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  padding-top: 5px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.icon:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.nav-text {
+  margin-left: 1rem;
+  color: #555;
+  text-decoration: none;
+  font-size: 1rem;
+  transition:  color 0.3s ease;
+}
+.nav-text:hover {
+  color: #000;
+}
+
+/* スクロール時に下のコンテンツが隠れないよう余白 */
+body {
+  padding-top: 60px;
+}
+
+
+/* ダークモードの設定 */
+.dark-toggle{
+  width:46px;
+  height:26px;
+  padding:0;
+  border-radius:13px;
+  border:1px solid #999;               /* 薄い枠線でニュートラルに */
+  background:#ffffff;                  /* ライト時は白トラック */
+  cursor:pointer;
+  position:relative;
+  transition:background .3s ease,border-color .3s ease;
+}
+.dark-toggle::after{
+  content:"";
+  position:absolute;
+  top:2px;
+  left:2px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:#000000;                  /* 黒ノブ */
+  transition:transform .3s ease,background .3s ease;
+}
+.dark-toggle:hover{
+  border-color:#666;
+}
+
+body.dark-mode .dark-toggle{
+  background:#000000;
+  border-color:#666;
+}
+body.dark-mode .dark-toggle::after{
+  transform:translateX(20px);
+  background:#ffffff;
+}
+body.dark-mode .dark-toggle:hover{
+  border-color:#aaa;
+}
+
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+/* Navbar */
+body.dark-mode .navbar {
+  background: #121212;
+  border-bottom: 1px solid #333;
+}
+body.dark-mode .logo       { color: #e0e0e0; }
+body.dark-mode .nav-text   { color: #ccc; }
+body.dark-mode .nav-text:hover { color: #fff; }
+
+/* Card */
+body.dark-mode .card {
+  background: #121212;
+  border: 1px solid #333;
+  color: #e0e0e0;
+}
+body.dark-mode .card-description { color: #aaa; }
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+}
+body.dark-mode .card:hover {
+  box-shadow: 0 6px 18px rgba(150,150,150,0.60);
+}
+
+.icon:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}

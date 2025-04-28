@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
             function updateGithubIcon() {
                 if (document.body.classList.contains('dark-mode')) {
-                    githubIcon.src = 'assets/github-mark-white.svg';
+                    githubIcon.src = '/assets/github-mark-white.svg';
                 } else {
-                    githubIcon.src = 'assets/github-mark-dark.svg';
+                    githubIcon.src = '/assets/github-mark-dark.svg';
                 }
             }
         

@@ -1,3 +1,4 @@
+/* カード */
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -5,7 +6,6 @@
   margin-top: 2rem;
 }
 
-/* カード全体をリンク化 */
 .card {
   display: block;
   background-color: #fff;
@@ -20,8 +20,12 @@
   font-family: "Roboto", sans-serif;
   line-height: 1.6;
 }
+.card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  background-color: #fdfdfd;
+}
 
-/* 子要素 */
 .card-title,
 .card-description {
   position: relative;
@@ -40,12 +44,7 @@
   margin: 0;
 }
 
-/* ホバー時の動き */
-.card:hover {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-  background-color: #fdfdfd;
-}
+
 
 /* ナビゲーションバー */
 .navbar {
@@ -107,10 +106,15 @@
 }
 
 
+
 /* スクロール時に下のコンテンツが隠れないよう余白 */
 body {
   padding-top: 60px;
 }
+
+
+
+/* TOC */
 .stackedit__left {
   padding-top: 80px;
   border-right: 1px solid #ddd;
@@ -121,6 +125,10 @@ body {
 .stackedit__right {
   padding-top: 60px;
 }
+.dark-mode .stackedit__toc ul li:hover {
+  background-color: #333;
+}
+
 
 
 /* ダークモードの設定 */
@@ -129,8 +137,8 @@ body {
   height:26px;
   padding:0;
   border-radius:13px;
-  border:1px solid #999;               /* 薄い枠線でニュートラルに */
-  background:#ffffff;                  /* ライト時は白トラック */
+  border:1px solid #999;
+  background:#ffffff;
   cursor:pointer;
   position:relative;
   transition:background .3s ease,border-color .3s ease;
@@ -143,7 +151,7 @@ body {
   width:20px;
   height:20px;
   border-radius:50%;
-  background:#000000;                  /* 黒ノブ */
+  background:#000000;
   transition:transform .3s ease,background .3s ease;
 }
 .dark-toggle:hover{

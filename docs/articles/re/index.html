@@ -8,7 +8,7 @@
   <meta name="description" content="Pythonのreモジュールについて、関数と例外をまとめました。">
   <meta property="og:site_name" content="Python Insight">
   <meta property="og:title" content="reモジュール">
-  <meta property="og:url" content="https://totosuki.github.io/re">
+  <meta property="og:url" content="https://totosuki.github.io/articles/re">
   <meta property="og:description" content="Pythonに関する様々な知見をまとめたサイト。">
   
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" />
@@ -181,7 +181,7 @@ match <span class="token operator">=</span> re<span class="token punctuation">.<
 <h2 id="re.finditer">re.finditer</h2>
 <p><code>pattern</code>に当てはまる全ての文字列を、順々に表示するイテレータを作成する。<br>
 作成されるイテレータの型は<code>callable_iterator</code>。<br>
-因みに、「イテレータとは何か？」については<a href="/iterable-iterator">私の記事</a>でも紹介をしている。</p>
+因みに、「イテレータとは何か？」については<a href="/articles/iterable-iterator">私の記事</a>でも紹介をしている。</p>
 <pre class=" language-python"><code class="prism  language-python">match <span class="token operator">=</span> re<span class="token punctuation">.</span>finditer<span class="token punctuation">(</span>
   pattern <span class="token operator">=</span> r<span class="token string">"t[a-z]*"</span><span class="token punctuation">,</span>
   string <span class="token operator">=</span> <span class="token string">"I want to go to the game too."</span>

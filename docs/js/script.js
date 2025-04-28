@@ -1,8 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const toggle = document.getElementById('darkModeToggle');
-    if (toggle) {
-        toggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-        });
+    const toggleBtn  = document.getElementById('darkModeToggle');
+
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark' || !saved) {
+        document.body.classList.add('dark-mode');
     }
+
+    toggleBtn?.addEventListener('click', () => {
+        const isDark = document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
 });

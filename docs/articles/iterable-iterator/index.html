@@ -4,19 +4,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>【Python】IterableとIterator | Python Insight</title>
+  <title>【Python】IterableとIterator | PySight</title>
   <meta name="description" content="Pythonのiterableとiteratorの違いを解説。基本的な概念からfor文の仕組み、実装例までをまとめてみました。">
-  <meta property="og:site_name" content="Python Insight">
+
+  <meta property="og:site_name" content="PySight">
   <meta property="og:title" content="iterableとiteratorとは">
-  <meta property="og:url" content="https://totosuki.github.io/iterable-iterator">
-  <meta property="og:description" content="Pythonに関する様々な知見をまとめたサイト。">
+  <meta property="og:url" content="https://pysight.dev/articles/iterable-iterator">
+  <meta property="og:description" content="Pythonのiterableとiteratorの違いを解説。基本的な概念からfor文の仕組み、実装例までをまとめてみました。">
+  <meta property="og:type" content="website" />
   
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" />
-  <link rel="stylesheet" href="https://stackedit.io/style.css" />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="icon" href="favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <script src="js/script.js" defer></script>
+  <link rel="canonical" href="https://pysight.dev/articles/iterable-iterator/">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"   rel="stylesheet" />
+  <!--
+    This site uses CSS originally from StackEdit (https://stackedit.io), 
+    licensed under the Apache License 2.0.
+  -->
+  <link rel="stylesheet" href="/css/stackedit.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <script src="/js/script.js" defer></script>
 </head>
 
 <body class="stackedit">
@@ -49,7 +56,7 @@
 <p>for文から<code>iterable</code>と<code>iterator</code>について触れて考えてみる。<br><br>
 また分かりやすくするため、できるだけ最小構成のクラスで試してみた。</p>
 <p>注意として、<code>__iter__</code>や<code>__next__</code>などの特殊メソッドについての説明はしていない。<br><br>
-そして<a href="https://totosuki.github.io/">Home</a>でも書いているが、自分なりに<code>iterable</code>と<code>iterator</code>の違いを調べたメモをまとめたものである。</p>
+そして<a href="/">Home</a>でも書いているが、自分なりに<code>iterable</code>と<code>iterator</code>の違いを調べたメモをまとめたものである。</p>
 <h1 id="for文が動く条件">for文が動く条件</h1>
 <h2 id="iter__">__iter__</h2>
 <p>まず初めに、<code>__iter__</code>のみを実装したクラスでfor文を回してみる</p>

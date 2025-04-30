@@ -4,67 +4,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home | Python Insight</title>
-  <meta name="description" content="Pythonに関する様々な知見をまとめたサイト。">
-  <meta property="og:site_name" content="Python Insight">
-  <meta property="og:title" content="Home">
-  <meta property="og:url" content="https://totosuki.github.io/">
-  <meta property="og:description" content="Pythonに関する様々な知見をまとめたサイト。">
+  <title>Home | PySight</title>
+  <meta name="description" content="Pythonに関する様々な知見をまとめる PySight のトップページ。">
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" />
-  <link rel="stylesheet" href="https://stackedit.io/style.css" />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="icon" href="favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <meta property="og:site_name"   content="PySight">
+  <meta property="og:title"       content="Home | PySight">
+  <meta property="og:url"         content="https://pysight.dev/">
+  <meta property="og:description" content="Pythonに関する様々な知見をまとめる PySight のトップページ。">
+  <meta property="og:type"        content="website" />
 
-  <script src="js/script.js" defer></script>
+  <link rel="canonical" href="https://pysight.dev/">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"   rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <script src="/js/script.js" defer></script>
 </head>
 
-<body class="stackedit">
+<body class="homepage">
   <div id="navbar-placeholder"></div>
 
-  <div class="stackedit__html">
-    <h1>はじめに</h1>
-    <p>こんにちは、totosukiです。</p>
-    <p>このサイトは、私の個人ホームページ兼、Pythonに関する知見をまとめたサイトです。</p>
-    <p>Python Insightでは、公式ドキュメントだけでは掴みにくい仕様や内部の仕組みについて、実際に調査・実験した結果を記事としてまとめています。ちょっとマニアックだけど、読み物としても楽しめる内容を目指しています。</p>
-
-    <h1>記事一覧</h1>
-    <p>辞書順に並べてあります。</p>
-    <div class="card-container">
-      <a href="https://totosuki.github.io/doc" class="card">
-        <h3 class="card-title">__doc__について</h3>
-        <p class="card-description">Pythonの特殊属性__doc__の基本と使い方を紹介。docstringを利用したカスタマイズ方法や記述スタイルのポイントも紹介します。</p>
-      </a>
-      <a href="https://totosuki.github.io/mro" class="card">
-        <h3 class="card-title">Classの多重継承とMRO</h3>
-        <p class="card-description">Pythonの多重継承とMRO(Method Resolution Order)について解説。MROの基本ルールやメソッドの呼び出し順序を調べました。</p>
-      </a>
-      <a href="https://totosuki.github.io/ellipsis" class="card">
-        <h3 class="card-title">Ellipsisオブジェクト</h3>
-        <p class="card-description">Pythonの組み込み定数Ellipsisオブジェクトについて紹介。リテラル記法やNumPyでの使い方を具体例で紹介します。</p>
-      </a>
-      <a href="https://totosuki.github.io/frozenset" class="card">
-        <h3 class="card-title">frozenset型</h3>
-        <p class="card-description">Pythonのfrozenset型を紹介。set型との違いや辞書のキーとしての利用方法を具体例で紹介します。</p>
-      </a>
-      <a href="https://totosuki.github.io/iterable-iterator" class="card">
-        <h3 class="card-title">iterableとiteratorとは</h3>
-        <p class="card-description">Pythonのiterableとiteratorの違いを解説。基本的な概念からfor文の仕組み、実装例までをまとめてみました。</p>
-      </a>
-      <a href="https://totosuki.github.io/re" class="card">
-        <h3 class="card-title">reモジュール</h3>
-        <p class="card-description">Pythonのreモジュールについて、関数と例外をまとめました。</p>
-      </a>
-      <a href="https://totosuki.github.io/tuple-literals" class="card">
-        <h3 class="card-title">tuple型のリテラル記述方法</h3>
-        <p class="card-description">Pythonのtuple型のリテラルでの記述方法を紹介。</p>
-      </a>
-      <a href="https://totosuki.github.io/non-existent-key" class="card">
-        <h3 class="card-title">存在しないキー取得時の対処法3選</h3>
-        <p class="card-description">Pythonの辞書で存在しないキーを扱う方法を紹介。try-except文、dict.getメソッド、defaultdictの使い方を具体例と共に紹介します。</p>
-      </a>
+  <header class="hero">
+    <h1 class="hero-logo">PySight</h1>
+    <p class="hero-tagline">A Personal Python Site by <strong>totosuki</strong></p>
+    <div class="hero-cta">
+      <a href="/articles/" class="btn">Articles</a>
+      <a href="/about/"    class="btn">About</a>
     </div>
-  </div>
+  </header>
+
+  <section class="quote">
+    <blockquote>
+      <p>“Simple is <em>better</em> than complex.”<br /><span>― The Zen of Python</span></p>
+    </blockquote>
+  </section>
 </body>
 </html>

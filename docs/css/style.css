@@ -59,6 +59,7 @@ a {
 .icon {
   width: 24px;
   height: 24px;
+  vertical-align: text-bottom;
   display: inline-block;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }

@@ -336,3 +336,15 @@ body.dark-mode .status-bar{
 body{
   padding-bottom:28px;
 }
+
+.card h3 {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+
+
+/* ========== font ========== */
+.font-title {
+  font-family: "Space Grotesk", sans-serif;
+}

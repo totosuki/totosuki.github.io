@@ -20,53 +20,6 @@ a {
 
 
 
-/* ========== カード ========== */
-.card-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.card {
-  display: block;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  text-decoration: none;
-  color: inherit;
-  transition: all 0.2s ease;
-  position: relative;
-  font-family: "Roboto", sans-serif;
-  line-height: 1.6;
-}
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.10);
-}
-
-.card-title,
-.card-description {
-  position: relative;
-  z-index: 1;
-}
-
-.card-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 0 0 0.5rem;
-}
-
-.card-description {
-  font-size: 0.95rem;
-  color: #555;
-  margin: 0;
-}
-
-
-
 /* ========== ナビゲーションバー ========== */
 .navbar {
   position: fixed;
@@ -216,17 +169,6 @@ body.dark-mode .logo       { color: #e0e0e0; }
 body.dark-mode .nav-text   { color: #ccc; }
 body.dark-mode .nav-text:hover { color: #fff; }
 
-body.dark-mode .card {
-  background: #121212;
-  border: 1px solid #333;
-  color: #e0e0e0;
-}
-body.dark-mode .card-description { color: #aaa; }
-
-body.dark-mode .card:hover {
-  box-shadow: 0 6px 18px rgba(150,150,150,0.60);
-}
-
 body.dark-mode blockquote {
   color : #aaa;
   border-left: 4px solid #333;
@@ -317,4 +259,80 @@ body.homepage {
   border-left: none !important;
   padding-left: 0 !important;
   margin: 0;
+}
+
+
+
+/* ========== Article Page ========== */
+.card {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border: 1px solid #D5D5D5;
+  border-radius: 10px;
+  color: #333;
+  background: #fff;
+  font-weight: 600;
+  transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .15s ease;
+}
+.card::after {
+  content: '';
+  width: .65rem;
+  height: .65rem;
+  margin-left: auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg) translateX(-2px);
+  opacity: .6;
+  transition: transform .20s ease, opacity .20s ease;
+}
+.card:hover,
+.card:hover::after {
+  opacity: 1;
+  transform: translateX(4px);
+}
+.card:hover::after {
+  transform: rotate(-45deg);
+}
+body.dark-mode .card {
+  background: #121212;
+  border-color: #444;
+  color: #ddd;
+}
+body.dark-mode .card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.status-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:28px;
+  padding:0 12px;
+  font-family:"Space Grotesk","Noto Sans JP",monospace;
+  font-size:0.85rem; 
+  line-height:28px;
+  background:#fff;
+  color:#333;
+  border-top:1px solid #333;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  z-index:900;
+  text-align: center;
+}
+body.dark-mode .status-bar{
+  background:#121212; 
+  border-top-color:#666; 
+  color:#fff;
+}
+body{
+  padding-bottom:28px;
 }

@@ -28,4 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateGithubIcon();
             });
         });
+    
+    const statusBar = document.getElementById('status-bar');
+    if (statusBar) {
+        document.querySelectorAll('.card[data-desc]').forEach(card => {
+            const desc = card.dataset.desc;
+            card.addEventListener('mouseenter', () => { statusBar.textContent = desc; });
+            card.addEventListener('focus',      () => { statusBar.textContent = desc; });
+            card.addEventListener('mouseleave', () => { statusBar.textContent = '';   });
+            card.addEventListener('blur',       () => { statusBar.textContent = '';   });
+        });
+    }
 });

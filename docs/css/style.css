@@ -1,4 +1,26 @@
-/* カード */
+/* ========== 基本レイアウト・リセット ========== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: "Noto Sans JP", "Roboto", sans-serif;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none; color: inherit;
+}
+
+
+
+/* ========== カード ========== */
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -21,9 +43,8 @@
   line-height: 1.6;
 }
 .card:hover {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
-  background-color: #fdfdfd;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.10);
 }
 
 .card-title,
@@ -46,7 +67,7 @@
 
 
 
-/* ナビゲーションバー */
+/* ========== ナビゲーションバー ========== */
 .navbar {
   position: fixed;
   top: 0;
@@ -86,7 +107,6 @@
   width: 24px;
   height: 24px;
   display: inline-block;
-  padding-top: 5px;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 .icon:hover {
@@ -107,14 +127,14 @@
 
 
 
-/* スクロール時に下のコンテンツが隠れないよう余白 */
+/* ========== スクロール時に下のコンテンツが隠れないよう余白 ========== */
 body {
   padding-top: 60px;
 }
 
 
 
-/* TOC */
+/* ========== TOC ========== */
 .stackedit__left {
   padding-top: 80px;
   border-right: 1px solid #ddd;
@@ -144,7 +164,7 @@ h6::before {
 
 
 
-/* ダークモードの設定 */
+/* ========== ダークモード ========== */
 .dark-toggle{
   width:46px;
   height:26px;
@@ -188,7 +208,6 @@ body.dark-mode {
   color: #e0e0e0;
 }
 
-/* Navbar */
 body.dark-mode .navbar {
   background: #121212;
   border-bottom: 1px solid #333;
@@ -197,7 +216,6 @@ body.dark-mode .logo       { color: #e0e0e0; }
 body.dark-mode .nav-text   { color: #ccc; }
 body.dark-mode .nav-text:hover { color: #fff; }
 
-/* Card */
 body.dark-mode .card {
   background: #121212;
   border: 1px solid #333;
@@ -205,17 +223,8 @@ body.dark-mode .card {
 }
 body.dark-mode .card-description { color: #aaa; }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.10);
-}
 body.dark-mode .card:hover {
   box-shadow: 0 6px 18px rgba(150,150,150,0.60);
-}
-
-.icon:hover {
-  transform: scale(1.15);
-  opacity: 0.8;
 }
 
 body.dark-mode blockquote {
@@ -224,5 +233,88 @@ body.dark-mode blockquote {
 }
 
 body.dark-mode code {
-  background: #222
+  background: #222;
+}
+
+body.dark-mode .hero {
+  background: #121212;
+}
+
+body.dark-mode .btn {
+  color: #ddd;
+  border: 1px solid #aaa;
+}
+body.dark-mode .btn:hover {
+  box-shadow: 0 6px 18px rgba(150, 150, 150, 0.1);
+}
+
+
+
+/* ========== home page ========== */
+body.homepage {
+  padding-top: 0;
+  overflow-x: hidden; 
+}
+
+.hero {
+  padding-top: 10vh;
+  display: flex;
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center;
+  min-height: 80vh; 
+  text-align: center; 
+  background: #fff;
+}
+
+.hero-logo {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(5rem, 10vw, 10rem);
+  font-weight: 700; margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.hero-tagline {
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  margin: 1.2rem 0 2rem;
+}
+
+.hero-cta {
+  display: flex; 
+  gap: 1.2rem;
+  flex-wrap: wrap; 
+  justify-content: center; 
+}
+
+.btn {
+  color: #222;
+  padding: 0.9rem 2.2rem;
+  border-radius: 20px;
+  border: 1px solid #555;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+.btn:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1); 
+}
+
+.quote {
+  padding: 2rem 1rem; 
+  max-height: 10vh;
+  font-family: "Space Grotesk", sans-serif; 
+  font-style: italic; 
+  font-size: 0.95rem;
+  text-align: center; 
+  color: #333;
+}
+.quote span { 
+  font-size: 0.9rem; 
+  color: #666; 
+}
+.quote blockquote {
+  border-left: none !important;
+  padding-left: 0 !important;
+  margin: 0;
 }

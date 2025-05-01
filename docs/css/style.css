@@ -79,6 +79,25 @@ a {
   color: #000;
 }
 
+@media (max-width: 400px) {
+  .nav-icons a {
+    font-size: 0.85rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .nav-icons {
+    gap: 0.6rem;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 
 
 /* ========== スクロール時に下のコンテンツが隠れないよう余白 ========== */
@@ -274,6 +293,7 @@ body.homepage {
   color: #333;
   background: #fff;
   font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
   transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .15s ease;
 }
 .card::after {
@@ -283,17 +303,23 @@ body.homepage {
   margin-left: auto;
   border-right: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
-  transform: rotate(-45deg) translateX(-2px);
+  transform: rotate(-45deg) translateX(0px);
   opacity: .6;
   transition: transform .20s ease, opacity .20s ease;
 }
 .card:hover,
 .card:hover::after {
   opacity: 1;
-  transform: translateX(4px);
+  transform: translateX(2vw);
 }
 .card:hover::after {
   transform: rotate(-45deg);
+}
+.card:focus {
+  outline: none;
+}
+.card:focus-visible {
+  box-shadow: 0 0 0 3px rgba(13,111,253,.6);
 }
 body.dark-mode .card {
   background: #121212;

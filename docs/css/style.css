@@ -13,6 +13,7 @@
   --card-border: #444;
   --toc-li: #222;
   --code: #222;
+  --link: #3b82f6;
 }
 
 .light-mode {
@@ -30,6 +31,7 @@
   --card-border: #d5d5d5;
   --toc-li: #eee;
   --code: #f2f2f2;
+  --link: #3b82f6;
 }
 
 
@@ -50,6 +52,15 @@ html, body {
 }
 
 a { text-decoration: none; color: inherit; }
+.stackedit__right a {text-decoration: underline; color: var(--link); }
+.stackedit__right a:hover {text-decoration: none; }
+
+blockquote {
+  color: var(--quote-p);
+  border-left: 4px solid var(--border);
+}
+
+code, pre { background: var(--code) !important; }
 
 
 
@@ -148,15 +159,6 @@ h6::before {
 .light-mode .dark-toggle::after {
   transform: translateX(20px);
   background: #fff;
-}
-
-blockquote {
-  color: var(--quote-p);
-  border-left: 4px solid var(--border);
-}
-
-code, pre {
-  background: var(--code) !important;
 }
 
 

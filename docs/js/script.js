@@ -41,4 +41,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
     );
   }
+
+  const isExternal = (url) => {
+    return url.startsWith('http') && !url.includes(location.hostname);
+  };
+  
+  document.querySelectorAll('.stackedit__right a[href]').forEach(link => {
+    if (!link.hasAttribute('target') && isExternal(link.href)) {
+      link.setAttribute('target', '_blank');
+      link.setAttribute('rel', 'noopener noreferrer');
+    }
+  });
 });

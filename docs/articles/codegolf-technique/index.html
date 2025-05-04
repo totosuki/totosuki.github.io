@@ -1,0 +1,432 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【Python】Code Golfのテクニック5選 | PySight</title>
+  <meta name="description" content="Code Golf の概要を「Hello World」で解説し、変数名短縮・セイウチ演算子・open(0) 入力・“YNeos”スライスなど、Python での Code Golf テクニックを5つ、実例付きで紹介します。">
+
+  <meta property="og:site_name" content="PySight">
+  <meta property="og:title" content="【Python】Code Golfのテクニック5選 | PySight">
+  <meta property="og:url" content="https://pysight.dev/articles/codegolf-technique/">
+  <meta property="og:description" content="Code Golf の概要を「Hello World」で解説し、変数名短縮・セイウチ演算子・open(0) 入力・“YNeos”スライスなど、Python での Code Golf テクニックを5つ、実例付きで紹介します。">
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pysight.dev/assets/pysight-summary.png">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="【Python】Code Golfのテクニック5選 | PySight">
+  <meta name="twitter:description" content="Code Golf の概要を「Hello World」で解説し、変数名短縮・セイウチ演算子・open(0) 入力・“YNeos”スライスなど、Python での Code Golf テクニックを5つ、実例付きで紹介します。">
+  <meta name="twitter:image" content="https://pysight.dev/assets/pysight-summary.png">
+  
+  <link rel="canonical" href="https://pysight.dev/articles/codegolf-technique/">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"   rel="stylesheet" />
+  <!--
+    This site uses CSS originally from StackEdit (https://stackedit.io), 
+    licensed under the Apache License 2.0.
+  -->
+  <link rel="stylesheet" href="/css/stackedit.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <script src="/js/script.js" defer></script>
+  <script src="/js/ga.js" defer></script>
+</head>
+
+<body class="stackedit">
+  <div id="navbar-placeholder"></div>
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#code-golfとは？">Code Golfとは？</a></li>
+<li><a href="#code-golf-テクニック5選">Code Golf テクニック5選</a>
+<ul>
+<li></li>
+</ul>
+</li>
+<li><a href="#基本的な短縮">1.　基本的な短縮</a>
+<ul>
+<li><a href="#変数名を１文字にする">1.1　変数名を１文字にする</a></li>
+<li><a href="#余計な空白を無くす">1.2　余計な空白を無くす</a></li>
+<li><a href="#余計な改行を無くす">1.3　余計な改行を無くす</a></li>
+<li><a href="#インデントを１にする">1.4　インデントを１にする</a></li>
+</ul>
+</li>
+<li><a href="#変数への代入テクニック">2.　変数への代入テクニック</a>
+<ul>
+<li><a href="#同じ値を複数の変数に代入したい場合">2.1　同じ値を複数の変数に代入したい場合</a></li>
+<li><a href="#アンパック代入">2.2　アンパック代入</a></li>
+<li><a href="#セイウチ演算子">2.3　セイウチ演算子</a></li>
+</ul>
+</li>
+<li><a href="#input-関数のテクニック">3.　input 関数のテクニック</a>
+<ul>
+<li><a href="#入力をそのままfor文に使う">3.1　入力をそのままfor文に使う</a></li>
+<li><a href="#必要の無い入力がある場合">3.2　必要の無い入力がある場合</a></li>
+<li><a href="#eval-関数を利用する">3.3　eval 関数を利用する</a></li>
+</ul>
+</li>
+<li><a href="#open0-の入力テクニック">4.　open(0) の入力テクニック</a>
+<ul>
+<li><a href="#open0-って何？">4.1　open(0) って何？</a></li>
+<li><a href="#open0-の注意点">4.2　open(0) の注意点</a></li>
+<li><a href="#open0-の入力その１">4.3　open(0) の入力その１</a></li>
+<li><a href="#open0-の入力その２">4.4　open(0) の入力その２</a></li>
+<li><a href="#open0-の-0-で初期化">4.5　open(0) の 0 で初期化</a></li>
+</ul>
+</li>
+<li><a href="#スライス-と-yneos">5.　スライス と “YNeos”</a>
+<ul>
+<li><a href="#yneos-って何？">5.1　YNeos って何？</a></li>
+<li><a href="#yneos-と-nyoe-s">5.2　YNeos と NYoe s</a></li>
+<li><a href="#条件式でインデックス指定">5.3　条件式でインデックス指定</a></li>
+</ul>
+</li>
+<li><a href="#参考">参考</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="code-golfとは？">Code Golfとは？</h1>
+<p>まず初めに、Code Golf とは<b>「できるだけ短いコードで、与えられた問題を解決する競技」</b>である。</p>
+<p>実際に例題を交えて説明した方が伝わると思うので、例題を用意した。</p>
+<pre class=" language-text"><code class="prism  language-text">以下の文章を出力してください。
+
+Hello World!
+Hello World!
+Hello World!
+Hello World!
+Hello World!
+</code></pre>
+<p>まずは、単純明快な解法を考えてみる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+</code></pre>
+<p><code>print</code> 関数を 5 回使用して問題を解いた。</p>
+<p>ここからは Code Golf をしていく。Code Golfはできるだけ短いコードで問題を解決する競技なので、更に短くしてみよう！</p>
+<p>今回の場合は、for文を使用することで更に短く出来そうだ。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+</code></pre>
+<p>また、 for文の中身が一行なので、以下のように書ける。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+</code></pre>
+<p>次に、変数 <code>i</code> は使わない為このように書くと四文字省略できる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">for</span> i <span class="token keyword">in</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">*</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+</code></pre>
+<hr>
+<p>ちなみに、<code>in</code> と <code>[0]</code> の間にスペースが無くても動く理由は、記号と文字が隣接している場合、間の空白が省略出来るからである。</p>
+<hr>
+<p>そして、おそらくこの例題の最短コードは以下である。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">exec</span><span class="token punctuation">(</span><span class="token string">"print('Hello World!');"</span><span class="token operator">*</span><span class="token number">5</span><span class="token punctuation">)</span>
+</code></pre>
+<p>それでは最初に書いたコードと、出来るだけ短く書いたコードを見比べて見る。<br>
+Code Golf がどのようなものか分かったかな？</p>
+<pre class=" language-python"><code class="prism :短縮前 language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :短縮後 language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello World!\n"</span><span class="token operator">*</span><span class="token number">5</span><span class="token punctuation">)</span>
+</code></pre>
+<h1 id="code-golf-テクニック5選">Code Golf テクニック5選</h1>
+<p>それでは。私が思う、Python の Code Golf で「これはおすすめ！」と思うテクニックを５項目に分けて紹介する。</p>
+<h3 id="注意書き">注意書き</h3>
+<ul>
+<li><a href="https://atcoder.jp/">AtCoder</a> 上での Code Golf を想定して記述してるため、<a href="https://code.golf/">Code Golf</a> といった Code Golf 用のサイトとはズレがある可能性がある。</li>
+<li><code>map(int, input().split())</code> のような、一般的に競技プログラミングで使われている入力方法を多く使用している。</li>
+</ul>
+<h1 id="基本的な短縮">1.　基本的な短縮</h1>
+<p>１つめは、１番重要でありとても効果的なテクニック（と呼べるか分からないが）である。</p>
+<h2 id="変数名を１文字にする">1.1　変数名を１文字にする</h2>
+<p>まずは、変数名を１文字にする。これをするだけで、Code Golf感が増し、コードの短縮に繋がる。</p>
+<p>また、Python ではアルファベットの大文字と小文字を区別出来るため、一文字でも変数名に困ることは Code Golf において無い。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">hello_text <span class="token operator">=</span> <span class="token string">"Hello World!"</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>hello_text<span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">T <span class="token operator">=</span> <span class="token string">"Hello World!"</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>T<span class="token punctuation">)</span>
+</code></pre>
+<h2 id="余計な空白を無くす">1.2　余計な空白を無くす</h2>
+<p>一般的なコードでは、可読性（コードの読みやすさ）を上げるために、空白や改行を使い見やすくするが、Code Golf では必要ない。</p>
+<p>また、Pythonで間の空白を省略出来る場合は沢山あるので、気になった方は是非色々試してみて欲しい。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">T <span class="token operator">=</span> <span class="token string">"Hello World!"</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>T<span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">T<span class="token operator">=</span><span class="token string">"Hello World!"</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>T<span class="token punctuation">)</span>
+</code></pre>
+<h2 id="余計な改行を無くす">1.3　余計な改行を無くす</h2>
+<p>if文やfor文などの、中身が１行の場合は、コロン <code>:</code> の隣に記述できる。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">T<span class="token operator">=</span><span class="token string">"Hello World!"</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>T<span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">T<span class="token operator">=</span><span class="token string">"Hello World!"</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token keyword">print</span><span class="token punctuation">(</span>T<span class="token punctuation">)</span>
+</code></pre>
+<h2 id="インデントを１にする">1.4　インデントを１にする</h2>
+<p>実は、インデントは１でもプログラムを動かすことが出来る。<br>
+可読性がとてもとても悪くなるので普段はしちゃ駄目！！</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">T<span class="token operator">=</span><span class="token string">"Hello World!"</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>T<span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">T<span class="token operator">=</span><span class="token string">"Hello World!"</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+ <span class="token keyword">print</span><span class="token punctuation">(</span>T<span class="token punctuation">)</span> <span class="token comment"># &lt;- 勿論処理が１行なのでfor文の横に書ける</span>
+</code></pre>
+<h1 id="変数への代入テクニック">2.　変数への代入テクニック</h1>
+<p>コードを書く上で欠かせないものが変数である。</p>
+<p>その中で、初期化や代入の部分で工夫をすることで、コードを短縮できる可能性がある。</p>
+<h2 id="同じ値を複数の変数に代入したい場合">2.1　同じ値を複数の変数に代入したい場合</h2>
+<p>同じ値を複数の変数に代入することは１行で簡潔に書ける。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">x<span class="token operator">=</span><span class="token number">0</span>
+y<span class="token operator">=</span><span class="token number">0</span>
+z<span class="token operator">=</span><span class="token number">0</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">x<span class="token operator">=</span>y<span class="token operator">=</span>z<span class="token operator">=</span><span class="token number">0</span>
+</code></pre>
+<p>基本的にイミュータブルの型であればこのテクニックを使うことができる。</p>
+<hr>
+<p>Python のイミュータブルな型は <code>bool</code> <code>int</code> <code>str</code> <code>tuple</code> などである。詳しくイミュータブルについて知りたい方は<a href="https://gammasoft.jp/blog/python-built-in-types/">こちらの記事</a>がおすすめ。</p>
+<h2 id="アンパック代入">2.2　アンパック代入</h2>
+<p>リストや文字列などのイテラブルなオブジェクトは、複数の変数へ一気に代入することができる。</p>
+<p>後ほど紹介するが、<code>open(0)</code> で入力を受け取る方法と相性が良く覚えておいて損は無い。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">A<span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>A<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">_<span class="token punctuation">,</span><span class="token operator">*</span>A<span class="token operator">=</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span>
+</code></pre>
+<h2 id="セイウチ演算子">2.3　セイウチ演算子</h2>
+<p>セイウチ演算子とは「変数の代入と使用」を同時に行える演算子である。あまり使用されていない演算子であるが、Code Golfで使用すると短縮できる場合が存在する。</p>
+<p>以下は、配列の長さが５以上の場合に配列の平均値を出力するプログラムである。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">A<span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+l<span class="token operator">=</span><span class="token builtin">len</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span>
+s<span class="token operator">=</span><span class="token builtin">sum</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>l<span class="token operator">&gt;=</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token keyword">print</span><span class="token punctuation">(</span>s<span class="token operator">/</span>l<span class="token punctuation">)</span>
+
+<span class="token comment"># よりCodeGolfっぽく書くと...</span>
+A<span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token operator">&gt;=</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">sum</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token operator">/</span><span class="token builtin">len</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python"><span class="token keyword">if</span><span class="token punctuation">(</span>l<span class="token punctuation">:</span><span class="token operator">=</span><span class="token builtin">len</span><span class="token punctuation">(</span>A<span class="token punctuation">:</span><span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">&gt;=</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">sum</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token operator">/</span>l<span class="token punctuation">)</span>
+</code></pre>
+<p>「変数の代入と使用」を同時に行っている箇所は、<code>:=</code> がある所である。</p>
+<p>if文や内包表記などの、普段は代入が行えない場所で代入が行えるのがとても便利！</p>
+<h1 id="input-関数のテクニック">3.　input 関数のテクニック</h1>
+<h2 id="入力をそのままfor文に使う">3.1　入力をそのままfor文に使う</h2>
+<p>「for文を使う入力であり、その入力が最後に来る」時には、そのままfor文に使ったほうが短くなる場合が多い。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">N<span class="token punctuation">,</span>X<span class="token operator">=</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+A<span class="token operator">=</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+c<span class="token operator">=</span><span class="token number">0</span>
+<span class="token keyword">for</span> a <span class="token keyword">in</span> A<span class="token punctuation">:</span>
+ <span class="token keyword">if</span> a<span class="token operator">&lt;</span>X<span class="token punctuation">:</span>c<span class="token operator">+=</span><span class="token number">1</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">N<span class="token punctuation">,</span>X<span class="token operator">=</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+c<span class="token operator">=</span><span class="token number">0</span>
+<span class="token keyword">for</span> a <span class="token keyword">in</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+ <span class="token keyword">if</span> a<span class="token operator">&lt;</span>X<span class="token punctuation">:</span>c<span class="token operator">+=</span><span class="token number">1</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+</code></pre>
+<h2 id="必要の無い入力がある場合">3.2　必要の無い入力がある場合</h2>
+<p>問題によっては、１つの行が完全に必要ない入力の場合がある。<br>
+<code>input()</code> は関数なので代入をせずに呼び出すことができる！</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">_<span class="token operator">=</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+A<span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">sum</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python"><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+A<span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">sum</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>また、必要の無い入力の後に２行以上入力が来る場合、セイウチ演算子を使うことで更に短縮に繋がる。<br>
+（ここまで入力が多いと<code>open(0)</code> を使用した場合の方が短い可能性が高い）</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token punctuation">(</span>i<span class="token punctuation">:</span><span class="token operator">=</span><span class="token builtin">input</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+A<span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span>i<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+B<span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span>i<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">sum</span><span class="token punctuation">(</span>A<span class="token operator">+</span>B<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="eval-関数を利用する">3.3　eval 関数を利用する</h2>
+<p>まず <code>eval</code> 関数とは、簡単に言うと「文字列として書いたコードを実行する関数」である。</p>
+<p>入力に使われる、<code>list(map(int, input().split()))</code> を文字列にして <code>eval</code> 関数で実行すると短縮することができる。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">A<span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+B<span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">S<span class="token operator">=</span><span class="token string">"list(map(int,input().split()))"</span>
+A<span class="token operator">=</span><span class="token builtin">eval</span><span class="token punctuation">(</span>S<span class="token punctuation">)</span>
+B<span class="token operator">=</span><span class="token builtin">eval</span><span class="token punctuation">(</span>S<span class="token punctuation">)</span>
+</code></pre>
+<p>個人的に好きな短縮方法なので紹介したが、実際は後ほど紹介する <code>open(0)</code> という方法があるため使うタイミングはあまりない…</p>
+<h1 id="open0-の入力テクニック">4.　open(0) の入力テクニック</h1>
+<p>先程、<code>input</code> 関数のテクニックを紹介しましたが、大量の入力を受け取る際には <code>open(0)</code> を使うと更に短く書ける場合が多い。</p>
+<h2 id="open0-って何？">4.1　open(0) って何？</h2>
+<p>Pythonでの入力を受け取る方法は、<code>input</code> <code>sys.stdin</code> <code>sys.stdin.buffer</code> <code>io.BytesIO</code> などあるが、<code>open(0)</code> というものでも入力を受け取ることが可能である。</p>
+<p>では、<code>open(0)</code> がなぜCode Golfで良く使われているかというと、全ての入力を改行区切りで一度に受け取る事ができるからである。</p>
+<h2 id="open0-の注意点">4.2　open(0) の注意点</h2>
+<p>では、早速 <code>open(0)</code> で入力した値を受け取ってみよう！以下のコードを実行してみる。</p>
+<pre class=" language-python"><code class="prism  language-python">S <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>S<span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-plaintext"><code class="prism :出力 language-plaintext">&lt;_io.TextIOWrapper name=0 mode='r' encoding='UTF-8'&gt;
+</code></pre>
+<p>すると、入力ができずにこのような出力になった。</p>
+<p>この問題の原因は、<code>open(0)</code> の戻り値が <code>str</code> 型では無く、 <code>TextIOWrapper</code> 型というものが戻り値として設定されている事が理由である。</p>
+<p>では、どのようにしたら入力をした値を利用できるのだろう？<br>
+ここで、<code>TextIOWrapper</code> クラスにはどのような関数が実装されているのか確認してみる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">dir</span><span class="token punctuation">(</span><span class="token builtin">open</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-plaintext"><code class="prism :出力 language-plaintext">[..., __iter__, ..., __next__, ...]
+</code></pre>
+<p>出力結果が長いので省略するが、<code>__iter__</code> と <code>__next__</code> 関数が含まれていた。これで、for文やアンパックなどをすることで、入力した値を利用できるということが分かった。</p>
+<p>ちなみに、 <code>__iter__</code> や <code>__next__</code> があるとfor文が出来るかは、<a href="https://pysight.dev/articles/iterable-iterator/">PySight 内の記事</a>で詳しく解説している。</p>
+<h2 id="open0-の入力その１">4.3　open(0) の入力その１</h2>
+<p>１番使用頻度が高いと思う <code>open(0)</code> での入力方法は、「１度に入力を受け取ってアンパック代入」である。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">N<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+S<span class="token operator">=</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>S<span class="token punctuation">[</span><span class="token punctuation">:</span>N<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment"># input() でも、もう少し短く出来る</span>
+N<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token punctuation">:</span>N<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">N<span class="token punctuation">,</span>S<span class="token operator">=</span><span class="token builtin">open</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>S<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token builtin">int</span><span class="token punctuation">(</span>N<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<p><code>open(0)</code> を使用する際、 <code>Ctrl+D</code> を押すことで標準入力を終了できる。</p>
+<p>もちろん、変数に <code>*</code> をつけることで、残りの要素を全て受け取ることもできる。</p>
+<pre class=" language-python"><code class="prism  language-python">N<span class="token punctuation">,</span><span class="token operator">*</span>S<span class="token operator">=</span><span class="token builtin">open</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>S<span class="token punctuation">)</span>
+</code></pre>
+<p>入力</p>
+<pre class=" language-plaintext"><code class="prism :入力 language-plaintext">5
+abcde
+vwxyz
+</code></pre>
+<p>出力</p>
+<pre class=" language-plaintext"><code class="prism :出力 language-plaintext">['abcde\n', 'vwxyz']
+</code></pre>
+<p>出力を見ると<code>open(0)</code> で入力を受け取ると、改行コード <code>\n</code> が残ることが分かる。</p>
+<p>対象法は色々ありますが良く使う３種類を軽く紹介する。</p>
+<ul>
+<li>空白区切りで後々リスト等にする場合：<code>split()</code></li>
+<li>ただ文字列として利用したい場合： <code>[:-1]</code></li>
+<li>上記以外で削除したい場合：<code>strip()</code></li>
+</ul>
+<p>もちろん上記の方法が最短になるとは限らないので、色々試してみるのが良いだろう。</p>
+<h2 id="open0-の入力その２">4.4　open(0) の入力その２</h2>
+<p>全ての入力が、空白 か <code>\n</code> で区切られてる時、以下の入力方法が使用できる。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">N<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+A<span class="token operator">=</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>A<span class="token punctuation">[</span><span class="token punctuation">:</span>N<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">N<span class="token punctuation">,</span><span class="token operator">*</span>A<span class="token operator">=</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">open</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>A<span class="token punctuation">[</span><span class="token punctuation">:</span>N<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<p>入力</p>
+<pre class=" language-plaintext"><code class="prism :入力 language-plaintext">3
+1 2 3 4 5
+</code></pre>
+<p>出力</p>
+<pre class=" language-plaintext"><code class="prism :出力 language-plaintext">[1, 2, 3]
+</code></pre>
+<p>どのような時に使うかだが、「空白 か <code>\n</code> で区切られていて、全ての入力を整数に変換したい」時が一番使うべきタイミングだ。</p>
+<h2 id="open0-の-0-で初期化">4.5　open(0) の 0 で初期化</h2>
+<p>これは入力のコツでは無いが、整数の変数を０で初期化したい時、<code>open(0)</code> と セイウチ演算子を組み合わせることで、１文字短縮に繋がる。</p>
+<pre class=" language-python"><code class="prism :変更前 language-python">X<span class="token punctuation">,</span><span class="token operator">*</span>A<span class="token operator">=</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">open</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+c<span class="token operator">=</span><span class="token number">0</span>
+<span class="token keyword">for</span> a <span class="token keyword">in</span> A<span class="token punctuation">:</span>
+ <span class="token keyword">if</span> a<span class="token operator">&lt;</span>X<span class="token punctuation">:</span>c<span class="token operator">+=</span><span class="token number">1</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :変更後 language-python">X<span class="token punctuation">,</span><span class="token operator">*</span>A<span class="token operator">=</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span><span class="token builtin">open</span><span class="token punctuation">(</span>c<span class="token punctuation">:</span><span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> a <span class="token keyword">in</span> A<span class="token punctuation">:</span>
+ <span class="token keyword">if</span> a<span class="token operator">&lt;</span>X<span class="token punctuation">:</span>c<span class="token operator">+=</span><span class="token number">1</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span>
+</code></pre>
+<p>入力</p>
+<pre class=" language-plaintext"><code class="prism :入力 language-plaintext">5
+1 2 3 4 5 6 7
+</code></pre>
+<p>出力</p>
+<pre class=" language-plaintext"><code class="prism :出力 language-plaintext">4
+</code></pre>
+<h1 id="スライス-と-yneos">5.　スライス と “YNeos”</h1>
+<p>実は、Code Golf では条件式を、配列のスライス操作に使う場合がある。</p>
+<h2 id="yneos-って何？">5.1　YNeos って何？</h2>
+<p>以下は、<code>x</code> が 3 未満の場合 <code>Yes</code> を出力し、そうでない場合は <code>No</code> を出力するコードだ。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">if</span> x <span class="token operator">&lt;</span> <span class="token number">3</span><span class="token punctuation">:</span>
+ <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Yes"</span><span class="token punctuation">)</span>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+ <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"No"</span><span class="token punctuation">)</span>
+</code></pre>
+<p>より短く書くと以下の様になる。<br>
+（更に空白を削れるが見にくいため、ここではしていない。）</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Yes"</span> <span class="token keyword">if</span> x<span class="token operator">&lt;</span><span class="token number">3</span> <span class="token keyword">else</span> <span class="token string">"No"</span><span class="token punctuation">)</span>
+</code></pre>
+<p>結構短くなったが、スライス操作を使用することで更に短く書くことが可能である。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"YNeos"</span><span class="token punctuation">[</span>x<span class="token operator">&gt;</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<p>「一体、何をしてるんだ！」となるかもしれない。</p>
+<p>そこで、 <code>"YNeos"</code> の０文字目から１つ飛ばしで文字を取り出して出力するコードを書いてみる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"YNeos"</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :出力 language-python">Yes
+</code></pre>
+<p><code>Yes</code> と出力された！</p>
+<p>２つのコードを見比べてみると<code>"YNeos"</code>が何をしていたか分かると思う。<br>
+このテクニック（ <code>"YNeos"</code> ）は…</p>
+<hr>
+<p>条件式が <code>True</code> なら 1 、<code>False</code> なら 0 として、スライスの開始位置を変えて、<code>"Yes"</code> か <code>"No"</code> を出力させるテクニックである。</p>
+<hr>
+<p>ちなみに、なぜ条件式（ <code>True</code> <code>False</code> ）が１や０として扱えるかと言うと、「 <code>bool</code> クラスが <code>int</code> クラスのサブクラス」であるからだ。</p>
+<p>詳しくは、<a href="https://docs.python.org/3/library/functions.html#bool">公式リファレンス</a>にて記述されている。</p>
+<h2 id="yneos-と-nyoe-s">5.2　YNeos と NYoe s</h2>
+<p><code>"YNeos"</code> の意味について理解できた所で、実際の使用例を見てみる。</p>
+<pre class=" language-plaintext"><code class="prism :問題文 language-plaintext">与えられた整数が、3 未満なら Yes そうでないなら No と出力してください。
+</code></pre>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"YNeos"</span><span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">&gt;</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<p>注意点としては、条件式を <code>int(input()) &lt; 3</code> にしてしまうと、３未満の場合 <code>True</code> となり、出力結果は <code>No</code> となってしまう。そのため上記のコードでは、「与えられた整数が 3 以上の場合に、条件式が <code>True</code> となる」ようにコードを書いている。</p>
+<p>次に <code>"YNeos"</code> が使えない場合にどうするのか、問題を交えて考えてみる。</p>
+<pre class=" language-plaintext"><code class="prism :問題文 language-plaintext">与えられた整数が、奇数なら Yes 偶数なら No と出力してください。
+</code></pre>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"NYoe s"</span><span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">%</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<p>まず、奇数偶数の判定は <code>%2</code> <code>&amp;1</code> などで行えて、両方とも奇数の場合 1 となる。<br>
+この問題では「奇数の場合に <code>Yes</code> 」のため、<code>"YNeos"</code> と書こうとすると少し冗長になってしまう。</p>
+<p>そこで、<code>Yes</code> と <code>No</code> の順番を入れ替えた<code>"NYoe s"</code>を使用することで短く書くことができる。</p>
+<h2 id="条件式でインデックス指定">5.3　条件式でインデックス指定</h2>
+<p>インデックス指定に条件式を入れるテクニックも存在する。</p>
+<pre class=" language-plaintext"><code class="prism :問題文 language-plaintext">「P」と入力したら Python と出力し、それ以外は C# と出力してください。
+</code></pre>
+<pre class=" language-python"><code class="prism :短縮前 language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"CP#y t h o n"</span><span class="token punctuation">[</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">==</span><span class="token string">"P"</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="prism :短縮後 language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">"C#"</span><span class="token punctuation">,</span><span class="token string">"Python"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">==</span><span class="token string">"P"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<p>今回の様に「2つの選択肢の文字列の長さに大きな差がある場合」は、インデックス指定の方が短い場合も存在する。</p>
+<p>また、変数に値を代入する際にもインデックス指定が最適な場合がある。<br>
+以下のコードは、入力した値が 20 未満の場合 10、それ以外は 20 を変数に代入している。</p>
+<pre class=" language-python"><code class="prism  language-python">x<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">&lt;</span><span class="token number">20</span><span class="token punctuation">]</span>
+</code></pre>
+<h1 id="参考">参考</h1>
+<p>本記事で参照した資料や参考リンクは各内容に応じて本文中に適宜リンクとして掲載している。</p>
+
+    </div>
+  </div>
+</body>
+
+</html>

@@ -292,7 +292,7 @@ B<span class="token operator">=</span><span class="token builtin">eval</span><sp
 <pre class=" language-plaintext"><code class="prism :出力 language-plaintext">[..., __iter__, ..., __next__, ...]
 </code></pre>
 <p>出力結果が長いので省略するが、<code>__iter__</code> と <code>__next__</code> 関数が含まれていた。これで、for文やアンパックなどをすることで、入力した値を利用できるということが分かった。</p>
-<p>ちなみに、 <code>__iter__</code> や <code>__next__</code> があるとfor文が出来るかは、<a href="https://pysight.dev/articles/iterable-iterator/">PySight 内の記事</a>で詳しく解説している。</p>
+<p>ちなみに、 <code>__iter__</code> や <code>__next__</code> があるとfor文が出来るかは、<a href="/articles/iterable-iterator">PySight 内の記事</a>で詳しく解説している。</p>
 <h2 id="open0-の入力その１">4.3　open(0) の入力その１</h2>
 <p>１番使用頻度が高いと思う <code>open(0)</code> での入力方法は、「１度に入力を受け取ってアンパック代入」である。</p>
 <pre class=" language-python"><code class="prism :変更前 language-python">N<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>

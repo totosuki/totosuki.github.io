@@ -72,4 +72,10 @@
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
     </url>
+    <url>
+        <loc>https://pysight.dev/articles/constants/</loc>
+        <lastmod>2025-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
 </urlset>

@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【Python】組み込み定数 | PySight</title>
+  <meta name="description" content="???">
+
+  <meta property="og:site_name" content="PySight">
+  <meta property="og:title" content="【Python】組み込み定数の全て | PySight">
+  <meta property="og:url" content="https://pysight.dev/articles/constants">
+  <meta property="og:description" content="Pythonの組み込み定数について解説。True, False, None, NotImplemented, Ellipsis, __debug__の特徴を具体例で紹介します。">
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pysight.dev/assets/pysight-summary.png">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="【Python】組み込み定数の全て | PySight">
+  <meta name="twitter:description" content="Pythonの組み込み定数について解説。True, False, None, NotImplemented, Ellipsis, __debug__の特徴を具体例で紹介します。">
+  <meta name="twitter:image" content="https://pysight.dev/assets/pysight-summary.png">
+  
+  <link rel="canonical" href="https://pysight.dev/articles/constants/">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"   rel="stylesheet" />
+  <!--
+    This site uses CSS originally from StackEdit (https://stackedit.io), 
+    licensed under the Apache License 2.0.
+  -->
+  <link rel="stylesheet" href="/css/stackedit.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <script src="/js/script.js" defer></script>
+  <script src="/js/ga.js" defer></script>
+</head>
+
+<body class="stackedit">
+  <div id="navbar-placeholder"></div>
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#組み込み定数">組み込み定数</a></li>
+<li><a href="#true-と-false">True と False</a></li>
+<li><a href="#none">None</a></li>
+<li><a href="#notimplemented">NotImplemented</a>
+<ul>
+<li><a href="#notimplemented-の効果">NotImplemented の効果</a></li>
+<li><a href="#notimplemented-のメリット">NotImplemented のメリット</a></li>
+</ul>
+</li>
+<li><a href="#ellipsis">Ellipsis</a></li>
+<li><a href="#debug__">__debug__</a></li>
+<li><a href="#真の定数">真の定数</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="組み込み定数">組み込み定数</h1>
+<p>「Pythonには定数が無い」と思われがちだが、実はいくつかの定数が存在する。<br>
+今回は、Built-in の名前空間の中にある組み込み定数を全て紹介してみる。</p>
+<h1 id="true-と-false">True と False</h1>
+<p>言わずと知れた真偽値だが、実は <code>True</code> と <code>False</code> は定数である。</p>
+<p>試しに <code>False</code> に値を代入してみよう。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token boolean">False</span> <span class="token operator">=</span> <span class="token number">5</span>
+</code></pre>
+<pre><code>  Cell In[1], line 1
+    False = 5
+    ^
+SyntaxError: cannot assign to False
+</code></pre>
+<p>しっかり <code>SyntaxError</code> が出力された。<code>True</code> も同様に再代入は不可能である。</p>
+<h1 id="none">None</h1>
+<p>値の非存在を表すオブジェクトである <code>NoneType</code> 型唯一のインスタンス。</p>
+<p>よく使うが、実は定数で代入ができない。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token boolean">None</span> <span class="token operator">=</span> <span class="token string">"Hello World"</span>
+</code></pre>
+<pre><code>  Cell In[2], line 1
+    None = "Hello World"
+    ^
+SyntaxError: cannot assign to None
+</code></pre>
+<h1 id="notimplemented">NotImplemented</h1>
+<p>特殊メソッドの二項演算系で、他の型に対して演算ができないときに返される値。</p>
+<p>試しに状況を再現してみる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__gt__<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>      <span class="token comment"># like 5 &gt; 10</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__gt__<span class="token punctuation">(</span><span class="token string">"Tanaka"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment"># like 5 &gt; "Tanaka"</span>
+</code></pre>
+<pre><code>False
+NotImplemented
+</code></pre>
+<p>整数と文字列型で比較は実装されていないので <code>NotImplemented</code> と出力された。</p>
+<h2 id="notimplemented-の効果">NotImplemented の効果</h2>
+<p><code>NotImplemented</code> があると何が便利なのか？という疑問に答えるために、以下の2つのクラスを実装してみる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">A</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__eq__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> obj<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"exec A.__eq__"</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>obj<span class="token punctuation">,</span> A<span class="token punctuation">)</span> <span class="token operator">or</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>obj<span class="token punctuation">,</span> B<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token boolean">True</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token boolean">False</span>
+
+<span class="token keyword">class</span> <span class="token class-name">B</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__eq__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> obj<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"exec B.__eq__"</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> NotImplemented
+
+</code></pre>
+<p><code>__eq__</code> は二項演算 <code>==</code> の特殊メソッドなので、それらを使用して確認してみる。</p>
+<pre class=" language-python"><code class="prism  language-python">a <span class="token operator">=</span> A<span class="token punctuation">(</span><span class="token punctuation">)</span>
+b <span class="token operator">=</span> B<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"--- a == a ---"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a <span class="token operator">==</span> a<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"--- a == b ---"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>a <span class="token operator">==</span> b<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"--- b == a ---"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>b <span class="token operator">==</span> a<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>--- a == a ---
+exec A.__eq__
+True
+--- a == b ---
+exec A.__eq__
+True
+--- b == a ---
+exec B.__eq__
+exec A.__eq__
+True
+</code></pre>
+<p>出力を見ると、最後の <code>b == a</code> では <code>B.__eq__</code> が呼ばれた後に <code>A.__eq__</code> を呼び出していることが分かる。これが <code>NotImplemented</code> の効果である。</p>
+<h2 id="notimplemented-のメリット">NotImplemented のメリット</h2>
+<p>この仕組みのメリットを、自作クラス <code>MyInt</code> を用いて説明する。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">MyInt</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> num<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>num <span class="token operator">=</span> num
+    
+    <span class="token keyword">def</span> <span class="token function">__eq__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> obj<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>obj<span class="token punctuation">,</span> MyInt<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> self<span class="token punctuation">.</span>num <span class="token operator">==</span> obj<span class="token punctuation">.</span>num
+        <span class="token keyword">elif</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>obj<span class="token punctuation">,</span> <span class="token builtin">int</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> self<span class="token punctuation">.</span>num <span class="token operator">==</span> obj
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> NotImplemented
+</code></pre>
+<p><code>int</code> 型には <code>MyInt</code> 型が来た際専用の処理は用意されていないが、出力はどうなるだろう？</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"--- MyInt(5) == int(5) ---"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>MyInt<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"--- int(5) == MyInt(5) ---"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">==</span> MyInt<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+</code></pre>
+<pre><code>--- MyInt(5) == int(5) ---
+True
+--- int(5) == MyInt(5) ---
+True
+</code></pre>
+<p>見事に同じ結果が出ている。この理由が <code>NotImplemented</code> である。</p>
+<p><code>int</code> 型の実装で、知らないクラスと二項演算する際には <code>NotImplemented</code> とすることで、左項と右項を入れ替えた特殊メソッドが呼ばれる。これにより「左項と右項を入れ替えても結果が同じ」になるのだ！</p>
+<h1 id="ellipsis">Ellipsis</h1>
+<p>Ellipsis については、<a href="/articles/ellipsis">別記事</a> で詳しく説明しているため、ここでは簡単に紹介する。</p>
+<p><code>Ellipsis</code> 型は定数であり、リテラル記法 <code>...</code> で記述できる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>Ellipsis<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token keyword">is</span> Ellipsis<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>&lt;class 'ellipsis'&gt;
+&lt;class 'ellipsis'&gt;
+True
+</code></pre>
+<p>ただし、名前 <code>Ellipsis</code> 自体は再代入できてしまう。</p>
+<pre class=" language-python"><code class="prism  language-python">Ellipsis <span class="token operator">=</span> <span class="token string">"World"</span>  <span class="token comment"># エラーにならない</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>Ellipsis<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>World
+</code></pre>
+<h1 id="debug__">__debug__</h1>
+<p>最後に、あまり知られていない <code>__debug__</code> という定数を紹介する。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">print</span><span class="token punctuation">(</span>__debug__<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>__debug__<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>True
+&lt;class 'bool'&gt;
+</code></pre>
+<p><code>__debug__</code> は Python を実行する際のオプションによって値が変わる定数である。</p>
+<ul>
+<li>通常の実行：<code>True</code> になる</li>
+<li><code>-O</code> <code>-OO</code> オプション付きで実行：<code>False</code> になる</li>
+</ul>
+<pre class=" language-bash"><code class="prism  language-bash"><span class="token comment"># 通常の実行</span>
+$ python -c <span class="token string">"print(__debug__)"</span>
+True
+
+<span class="token comment"># -Oオプション付きで実行</span>
+$ python -O -c <span class="token string">"print(__debug__)"</span>
+False
+</code></pre>
+<p><code>-O</code> オプションは「基本的な最適化」を行うオプションで、主に以下の処理を行う。</p>
+<ul>
+<li><code>__debug__</code> を <code>False</code> に設定</li>
+<li><code>assert</code> 文を除去</li>
+<li><code>if __debug__:</code> ブロック内コードを除去</li>
+</ul>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">if</span> __debug__<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"debug mode"</span><span class="token punctuation">)</span>
+<span class="token keyword">assert</span> <span class="token number">1</span> <span class="token operator">!=</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"1 must not be 1"</span>
+</code></pre>
+<p>通常実行では両方のコードが実行されるが、<code>-O</code> オプション付きでは両方とも完全に無視される。</p>
+<p>ただし、この最適化は主にデバッグコードの除去が目的で、実行速度の大幅な向上は期待できない。むしろ本番環境でデバッグ用のコードを確実に無効化することが主な用途である。</p>
+<p>また、通常実行時 <code>__debug__</code> は <code>True</code> であることから、普段何気なく実行している <code>python xxx.py</code> のようなコマンドはデバッグモードで実行していることが分かる。</p>
+<h1 id="真の定数">真の定数</h1>
+<p>公式ドキュメントでは、以下のように述べられている。</p>
+<blockquote>
+<p>名前 <code>None</code> 、 <code>False</code> 、 <code>True</code> 、 <code>__debug__</code> は再代入できない (これらに対する代入は、たとえ属性名としてであっても <code>SyntaxError</code> が送出されます) ので、これらは「真の」定数であると考えられます。</p>
+</blockquote>
+<p>つまり、Python における「真の定数」は以下の 4 つだけである。</p>
+<ul>
+<li><code>None</code></li>
+<li><code>False</code></li>
+<li><code>True</code></li>
+<li><code>__debug__</code></li>
+</ul>
+<p><code>NotImplemented</code> や <code>Ellipsis</code> は、値としては定数的な性質を持つが、名前自体は再代入可能なため「真の定数」ではない。</p>
+<h1 id="参考">参考</h1>
+<blockquote>
+<p>公式ドキュメント<br>
+<a href="https://docs.python.org/ja/3/library/constants.html">https://docs.python.org/ja/3/library/constants.html</a></p>
+</blockquote>
+<blockquote>
+<p>Real Python<br>
+<a href="https://realpython.com/python-assert-statement/">https://realpython.com/python-assert-statement/</a></p>
+</blockquote>
+
+    </div>
+  </div>
+</body>
+
+</html>

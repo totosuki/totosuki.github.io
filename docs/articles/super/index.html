@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【Python】super()の仕組み | PySight</title>
+  <meta name="description" content="Pythonのsuper()について、基本的な使い方からMROとの関係、引数の動作原理まで実例付きで解説します。">
+
+  <meta property="og:site_name" content="PySight">
+  <meta property="og:title" content="【Python】super()の仕組み | PySight">
+  <meta property="og:url" content="https://pysight.dev/articles/super">
+  <meta property="og:description" content="Pythonのsuper()について、基本的な使い方からMROとの関係、引数の動作原理まで実例付きで解説します。">
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://pysight.dev/assets/pysight-summary.png">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="【Python】super()の仕組み | PySight">
+  <meta name="twitter:description" content="Pythonのsuper()について、基本的な使い方からMROとの関係、引数の動作原理まで実例付きで解説します。">
+  <meta name="twitter:image" content="https://pysight.dev/assets/pysight-summary.png">
+  
+  <link rel="canonical" href="https://pysight.dev/articles/super/">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"   rel="stylesheet" />
+  <!--
+    This site uses CSS originally from StackEdit (https://stackedit.io), 
+    licensed under the Apache License 2.0.
+  -->
+  <link rel="stylesheet" href="/css/stackedit.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <script src="/js/script.js" defer></script>
+  <script src="/js/ga.js" defer></script>
+</head>
+
+<body class="stackedit">
+  <div id="navbar-placeholder"></div>
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#super">super()</a></li>
+<li><a href="#基本的な使い方">基本的な使い方</a></li>
+<li><a href="#mroを考慮した動作">MROを考慮した動作</a></li>
+<li><a href="#superの省略形">super()の省略形</a></li>
+<li><a href="#superの引数">super()の引数</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="super">super()</h1>
+<p>今回は、Pythonのクラスでよく使われる <code>super()</code> について紹介する。</p>
+<p><code>super()</code> は一見単純に見えるが、実際には多重継承やMRO（Method Resolution Order）と密接に関わる複雑な仕組みを持っている。また、<code>super</code> は公式ドキュメントでは組み込み関数として<a href="https://docs.python.org/ja/3.13/library/functions.html">挙げられている</a>が、実際にはクラスである。</p>
+<h1 id="基本的な使い方">基本的な使い方</h1>
+<p><code>super()</code> の基本的な機能は、継承関係にあるクラスで親クラスのメソッドを呼び出すことである。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">Arabic</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">print_hello</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"مرحبًا"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">English</span><span class="token punctuation">(</span>Arabic<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">print_hello</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"hello"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>print_hello<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Japanese</span><span class="token punctuation">(</span>English<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">print_hello</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"こんにちは"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>print_hello<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+Japanese<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>print_hello<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>こんにちは
+hello
+مرحبًا
+</code></pre>
+<p><code>super()</code> により、継承元の親クラスのメソッドが順番に呼ばれていることが分かる。</p>
+<p>また、この機能を使用して初期化でよく使われるパターンがある。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">Animal</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> name<span class="token punctuation">,</span> animal_type<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>name <span class="token operator">=</span> name
+        self<span class="token punctuation">.</span>animal_type <span class="token operator">=</span> animal_type
+
+<span class="token keyword">class</span> <span class="token class-name">Dog</span><span class="token punctuation">(</span>Animal<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> name<span class="token punctuation">,</span> animal_type<span class="token punctuation">,</span> dog_type<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span>name<span class="token punctuation">,</span> animal_type<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>dog_type <span class="token operator">=</span> dog_type
+
+<span class="token keyword">class</span> <span class="token class-name">Cat</span><span class="token punctuation">(</span>Animal<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> name<span class="token punctuation">,</span> animal_type<span class="token punctuation">,</span> cat_type<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span>name<span class="token punctuation">,</span> animal_type<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>cat_type <span class="token operator">=</span> cat_type
+
+dog <span class="token operator">=</span> Dog<span class="token punctuation">(</span><span class="token string">"ポチ"</span><span class="token punctuation">,</span> <span class="token string">"犬"</span><span class="token punctuation">,</span> <span class="token string">"トイプードル"</span><span class="token punctuation">)</span>
+cat <span class="token operator">=</span> Cat<span class="token punctuation">(</span><span class="token string">"タマ"</span><span class="token punctuation">,</span> <span class="token string">"猫"</span><span class="token punctuation">,</span> <span class="token string">"スコティッシュフォールド"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>dog<span class="token punctuation">.</span>name<span class="token punctuation">,</span> dog<span class="token punctuation">.</span>animal_type<span class="token punctuation">,</span> dog<span class="token punctuation">.</span>dog_type<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>cat<span class="token punctuation">.</span>name<span class="token punctuation">,</span> cat<span class="token punctuation">.</span>animal_type<span class="token punctuation">,</span> cat<span class="token punctuation">.</span>cat_type<span class="token punctuation">)</span>
+</code></pre>
+<pre><code>ポチ 犬 トイプードル
+タマ 猫 スコティッシュフォールド
+</code></pre>
+<h1 id="mroを考慮した動作">MROを考慮した動作</h1>
+<p><code>super()</code> が持つ機能として、MRO（Method Resolution Order）を考慮したメソッドアクセスが挙げられる。MROについて詳しくは、<a href="/articles/mro/">Classの多重継承とMROの記事</a>で解説しているが、簡単に言うとPythonが多重継承時にメソッドを探す順序のことである。</p>
+<p>では実際に、多重継承で <code>super()</code> がどのように動作するか確認してみる。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">A</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class A"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">B</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class B"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">C</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class C"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">D</span><span class="token punctuation">(</span>B<span class="token punctuation">,</span> C<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+D<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"MRO:"</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>cls<span class="token punctuation">.</span>__name__ <span class="token keyword">for</span> cls <span class="token keyword">in</span> D<span class="token punctuation">.</span>mro<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>Class B
+Class C
+Class A
+MRO: ['D', 'B', 'C', 'A', 'object']
+</code></pre>
+<p>これをよーく見てみると、Bクラスで <code>super()</code> が呼ばれているのにも関わらず、次にCクラスが呼ばれている。このことから、<code>super()</code> はただ単に親クラスを呼び出す訳ではなく、<b>MROによって次に呼び出すクラスが決まっている</b>ことが分かる。</p>
+<h1 id="superの省略形">super()の省略形</h1>
+<p>今までは<code>super()</code>の引数に何も値を入れていないが、これは省略されている記法である。</p>
+<p>正式な記法では以下のように書ける。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">A</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class A"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">B</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class B"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span>B<span class="token punctuation">,</span> self<span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># 省略なしの記法</span>
+
+<span class="token keyword">class</span> <span class="token class-name">C</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class C"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span>C<span class="token punctuation">,</span> self<span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># 省略なしの記法</span>
+
+<span class="token keyword">class</span> <span class="token class-name">D</span><span class="token punctuation">(</span>B<span class="token punctuation">,</span> C<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+D<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>Class B
+Class C
+Class A
+</code></pre>
+<h1 id="superの引数">super()の引数</h1>
+<p>次に、<code>super()</code> の引数について詳しく見てみる。<br>
+以下のような複雑な継承構造を作成して実験してみよう。</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">A</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class A"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">B</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class B"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">C</span><span class="token punctuation">(</span>A<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class C"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">D</span><span class="token punctuation">(</span>B<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class D"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">E</span><span class="token punctuation">(</span>C<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class E"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">F</span><span class="token punctuation">(</span>D<span class="token punctuation">,</span> E<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">introduce</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Class F"</span><span class="token punctuation">)</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"FクラスのMRO:"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">[</span>cls<span class="token punctuation">.</span>__name__ <span class="token keyword">for</span> cls <span class="token keyword">in</span> F<span class="token punctuation">.</span>mro<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span> sep<span class="token operator">=</span><span class="token string">" -&gt; "</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>FクラスのMRO:
+F -&gt; D -&gt; B -&gt; E -&gt; C -&gt; A -&gt; object
+</code></pre>
+<p>この継承構造で、<code>super()</code> の引数を変更して動作を確認してみる。</p>
+<pre class=" language-python"><code class="prism  language-python">f <span class="token operator">=</span> F<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"--- super(F, f) ---"</span><span class="token punctuation">)</span>
+<span class="token builtin">super</span><span class="token punctuation">(</span>F<span class="token punctuation">,</span> f<span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"\n--- super(D, f) ---"</span><span class="token punctuation">)</span>
+<span class="token builtin">super</span><span class="token punctuation">(</span>D<span class="token punctuation">,</span> f<span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"\n--- super(E, f) ---"</span><span class="token punctuation">)</span>
+<span class="token builtin">super</span><span class="token punctuation">(</span>E<span class="token punctuation">,</span> f<span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>--- super(F, f) ---
+Class D
+Class B
+Class E
+Class C
+Class A
+
+--- super(D, f) ---
+Class B
+Class E
+Class C
+Class A
+
+--- super(E, f) ---
+Class C
+Class A
+</code></pre>
+<p>この結果から、「第二引数のMROに基づいた順序を、第一引数の次の場所から始める」ということが分かる。</p>
+<p>試しに他のパターンでも実行してみる。今度は第二引数を変更して試してみよう。</p>
+<pre class=" language-python"><code class="prism  language-python">f <span class="token operator">=</span> F<span class="token punctuation">(</span><span class="token punctuation">)</span>
+d <span class="token operator">=</span> D<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"--- super(B, f) ---"</span><span class="token punctuation">)</span>
+<span class="token builtin">super</span><span class="token punctuation">(</span>B<span class="token punctuation">,</span> f<span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"\n--- super(B, d) ---"</span><span class="token punctuation">)</span>
+<span class="token builtin">super</span><span class="token punctuation">(</span>B<span class="token punctuation">,</span> d<span class="token punctuation">)</span><span class="token punctuation">.</span>introduce<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<pre><code>--- super(B, f) ---
+Class E
+Class C
+Class A
+
+--- super(B, d) ---
+Class A
+</code></pre>
+<p>第二引数のMROに基づいていることが検証できた！</p>
+<p>つまり、<code>super(第一引数, 第二引数)</code> は「第二引数のMROにおいて、第一引数の次に来るクラス」を返している！</p>
+<h1 id="参考">参考</h1>
+<blockquote>
+<p>公式ドキュメント<br>
+<a href="https://docs.python.org/3/library/functions.html#super">https://docs.python.org/3/library/functions.html#super</a></p>
+</blockquote>
+
+    </div>
+  </div>
+</body>
+
+</html>
